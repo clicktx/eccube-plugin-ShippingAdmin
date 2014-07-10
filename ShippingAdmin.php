@@ -193,6 +193,12 @@ class ShippingAdmin extends SC_Plugin_Base {
                 or strpos($class_name, 'ShippingAdmin') !== false
         ) {
             $param->addParam('宅配便荷物番号', 'search_plg_deliveadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
+            $param->addParam('開始年', 'search_sdelivedyear', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('開始月', 'search_sdelivedmonth', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('開始日', 'search_sdelivedday', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('終了年', 'search_edelivedyear', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('終了月', 'search_edelivedmonth', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('終了日', 'search_edelivedday', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
         }
     }
 
