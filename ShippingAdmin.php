@@ -275,7 +275,7 @@ class ShippingAdmin extends SC_Plugin_Base {
             case 'plg_ShippingAdmin_search':
                 $objFormParam->convParam();
                 $objFormParam->trimParam();
-                $objPage->arrErr = $objPage->lfCheckError($objFormParam);
+                $objPage->arrErr = $this->plg_lfCheckError($objFormParam);
                 $arrParam = $objFormParam->getHashArray();
 
                 if (count($objPage->arrErr) == 0) {
@@ -334,6 +334,42 @@ class ShippingAdmin extends SC_Plugin_Base {
             default:
                 break;
         }
+    }
+
+
+    /**
+     * 入力内容のチェックを行う.
+     *
+     * @param  SC_FormParam $objFormParam SC_FormParam インスタンス
+     * @return void
+     */
+    public function plg_lfCheckError(&$objFormParam)
+    {
+        $objErr = new SC_CheckError_Ex($objFormParam->getHashArray());
+        $objErr->arrErr = $objFormParam->checkError();
+
+        // 相関チェック
+        $objErr->doFunc(array('注文番号1', '注文番号2', 'search_order_id1', 'search_order_id2'), array('GREATER_CHECK'));
+        $objErr->doFunc(array('年齢1', '年齢2', 'search_age1', 'search_age2'), array('GREATER_CHECK'));
+        $objErr->doFunc(array('購入金額1', '購入金額2', 'search_total1', 'search_total2'), array('GREATER_CHECK'));
+        // 受注日
+        $objErr->doFunc(array('開始', 'search_sorderyear', 'search_sordermonth', 'search_sorderday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('終了', 'search_eorderyear', 'search_eordermonth', 'search_eorderday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('開始', '終了', 'search_sorderyear', 'search_sordermonth', 'search_sorderday', 'search_eorderyear', 'search_eordermonth', 'search_eorderday'), array('CHECK_SET_TERM'));
+        // 更新日
+        $objErr->doFunc(array('開始', 'search_supdateyear', 'search_supdatemonth', 'search_supdateday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('終了', 'search_eupdateyear', 'search_eupdatemonth', 'search_eupdateday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('開始', '終了', 'search_supdateyear', 'search_supdatemonth', 'search_supdateday', 'search_eupdateyear', 'search_eupdatemonth', 'search_eupdateday'), array('CHECK_SET_TERM'));
+        // 生年月日
+        $objErr->doFunc(array('開始', 'search_sbirthyear', 'search_sbirthmonth', 'search_sbirthday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('終了', 'search_ebirthyear', 'search_ebirthmonth', 'search_ebirthday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('開始', '終了', 'search_sbirthyear', 'search_sbirthmonth', 'search_sbirthday', 'search_ebirthyear', 'search_ebirthmonth', 'search_ebirthday'), array('CHECK_SET_TERM'));
+        // 発送日
+        $objErr->doFunc(array('開始', 'search_sdelivedyear', 'search_sdelivedmonth', 'search_sdelivedday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('終了', 'search_edelivedyear', 'search_edelivedmonth', 'search_edelivedday'), array('CHECK_DATE'));
+        $objErr->doFunc(array('開始', '終了', 'search_sdelivedyear', 'search_sdelivedmonth', 'search_sdelivedday', 'search_edelivedyear', 'search_edelivedmonth', 'search_edelivedday'), array('CHECK_SET_TERM'));
+
+        return $objErr->arrErr;
     }
 
     /**
