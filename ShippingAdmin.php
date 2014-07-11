@@ -247,6 +247,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         // modeを書き換えて LC_Page_Admin_Order の処理を無効にする
         $mode = $_REQUEST['mode'];
         $_REQUEST['mode'] = 'plg_ShippingAdmin_' . $mode;
+        $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
 
         $objFormParam = new SC_FormParam_Ex();
         $objPage->lfInitParam($objFormParam);

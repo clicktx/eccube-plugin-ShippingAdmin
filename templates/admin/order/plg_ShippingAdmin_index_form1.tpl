@@ -93,7 +93,14 @@ plg_ShippingAdmin
                                 <td class="center"><!--{$arrPayments[$payment_id]}--></td>
                                 <td class="right"><!--{$arrResults[cnt].total|number_format}--></td>
                                 <td class="center"><!--{$arrResults[cnt].commit_date|sfDispDBDate|default:"未発送"}--></td>
-                                <td class="center"><!--{$arrORDERSTATUS[$status]}--></td>
+                                <td class="center" nowrap>
+                                    <!--{$arrORDERSTATUS[$status]}-->
+                                    <!--{if ($arrResults[cnt].plg_shippingadmin_tracking_no)}-->
+                                        <!--{assign var=deliv_id value="`$arrResults[cnt].deliv_id`"}-->
+                                        <br /><!--{$arrDeliv[$deliv_id]}-->
+                                        <br /><!--{$arrResults[cnt].plg_shippingadmin_tracking_no}-->
+                                    <!--{/if}-->
+                                </td>
                                 <td class="center">
                                     <input type="checkbox" name="pdf_order_id[]" value="<!--{$arrResults[cnt].order_id}-->" id="pdf_order_id_<!--{$arrResults[cnt].order_id}-->"/><label for="pdf_order_id_<!--{$arrResults[cnt].order_id}-->">一括出力</label><br />
                                     <a href="./" onClick="eccube.openWindow('pdf.php?order_id=<!--{$arrResults[cnt].order_id}-->','pdf_input','620','650'); return false;"><span class="icon_class">個別出力</span></a>
