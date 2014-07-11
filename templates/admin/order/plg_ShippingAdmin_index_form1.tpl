@@ -19,8 +19,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *}-->
-
-    <!--{if count($arrErr) == 0 and $smarty.post.mode == 'plg_ShippingAdmin_search'}-->
+plg_ShippingAdmin
+    <!--{if count($arrErr) == 0}-->
 
         <!--★★検索結果一覧★★-->
         <form name="form1" id="form1" method="post" action="?">
@@ -87,7 +87,7 @@
                             <!--{assign var=status value="`$arrResults[cnt].status`"}-->
                             <tr style="background:<!--{$arrORDERSTATUS_COLOR[$status]}-->;">
                                 <td class="center"><!--{$arrResults[cnt].create_date|sfDispDBDate}--></td>
-                                <td class="center"><!--{$arrResults[cnt].order_id}--></td>
+                                <td class="center"><a href="#" onclick="eccube.openWindow('./disp.php?order_id=<!--{$arrResults[cnt].order_id}-->','order_disp','800','900',{resizable:'no',focus:false}); return false;"><!--{$arrResults[cnt].order_id}--></a></td>
                                 <td class="center"><!--{$arrResults[cnt].order_name01|h}--> <!--{$arrResults[cnt].order_name02|h}--></td>
                                 <!--{assign var=payment_id value="`$arrResults[cnt].payment_id`"}-->
                                 <td class="center"><!--{$arrPayments[$payment_id]}--></td>

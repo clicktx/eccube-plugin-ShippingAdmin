@@ -167,7 +167,7 @@ class ShippingAdmin extends SC_Plugin_Base {
                 if(strpos($filename, "order/index.tpl") !== false) {
                     $objTransform->select("form#search_form table", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_search_form.tpl"));
                     // $objTransform->select("div.btn-area", 0)->insertAfter(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_btn-area.tpl"));
-                    $objTransform->select("div#order")->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_form1.tpl"));
+                    $objTransform->select("form#form1")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_form1.tpl"));
                     // mode == delete の場合
                     $objTransform->select("form#form1")->appendFirst('***通常の検索結果***');
                 }
@@ -175,9 +175,6 @@ class ShippingAdmin extends SC_Plugin_Base {
                 elseif(strpos($filename, "order/edit.tpl") !== false) {
                     $objTransform->select("div")->insertBefore("ShippingAdminカブっていても別プラグインなら大丈夫？");
                 }
-                // elseif(strpos($filename, "order/disp.tpl") !== false) {
-                //     $objTransform->select("table#order-edit-products tr", 5)->insertBefore(file_get_contents($template_dir . "order/plg_ShippingAdmin_disp.tpl"));
-                // }
                 break;
         }
         $source = $objTransform->getHTML();
@@ -213,7 +210,6 @@ class ShippingAdmin extends SC_Plugin_Base {
 
         $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
-        // $objHelperPlugin->addAction("loadClassFileChange", array(&$this, "loadClassFileChange"), $this->arrSelfInfo['priority']);
     }
 
 
@@ -275,7 +271,7 @@ class ShippingAdmin extends SC_Plugin_Base {
             case 'plg_ShippingAdmin_search':
                 $objFormParam->convParam();
                 $objFormParam->trimParam();
-                $objPage->arrErr = $this->plg_lfCheckError($objFormParam);
+                $objPage->arrErr = $this->plg_ShippingAdmin_lfCheckError($objFormParam);
                 $arrParam = $objFormParam->getHashArray();
 
                 if (count($objPage->arrErr) == 0) {
@@ -343,7 +339,7 @@ class ShippingAdmin extends SC_Plugin_Base {
      * @param  SC_FormParam $objFormParam SC_FormParam インスタンス
      * @return void
      */
-    public function plg_lfCheckError(&$objFormParam)
+    public function plg_ShippingAdmin_lfCheckError(&$objFormParam)
     {
         $objErr = new SC_CheckError_Ex($objFormParam->getHashArray());
         $objErr->arrErr = $objFormParam->checkError();
