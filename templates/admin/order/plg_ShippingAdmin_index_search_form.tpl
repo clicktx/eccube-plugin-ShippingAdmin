@@ -52,9 +52,9 @@
                 </td>
             </tr>
             <tr>
-                <th>宅配便荷物番号</th>
+                <th>荷物追跡番号</th>
                 <td>
-                    <!--{assign var=key value="search_plg_deliveadmin_tracking_no"}-->
+                    <!--{assign var=key value="search_plg_shippingadmin_tracking_no"}-->
                     <!--{if $arrErr[$key]}--><span class="attention"><!--{$arrErr[$key]}--></span><!--{/if}-->
                     <input type="text" name="<!--{$key}-->" value="<!--{$arrForm[$key].value|h}-->" maxlength="20" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" size="6" class="box30">
                 </td>

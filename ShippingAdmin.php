@@ -173,6 +173,8 @@ class ShippingAdmin extends SC_Plugin_Base {
                 // 受注情報登録・編集画面
                 elseif(strpos($filename, "order/edit.tpl") !== false) {
                     $objTransform->select("div")->insertBefore("ShippingAdminカブっていても別プラグインなら大丈夫？");
+                    $objTransform->select("table", 5)->insertBefore("<h2>配送情報</h2>");
+                    $objTransform->select("table", 5)->find("tr", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
                 }
                 break;
         }
@@ -188,13 +190,16 @@ class ShippingAdmin extends SC_Plugin_Base {
         if (strpos($class_name, 'LC_Page_Admin_Order') !== false
                 or strpos($class_name, 'ShippingAdmin') !== false
         ) {
-            $param->addParam('宅配便荷物番号', 'search_plg_deliveadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
+            $param->addParam('荷物追跡番号', 'search_plg_shippingadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
             $param->addParam('開始年', 'search_sdelivedyear', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('開始月', 'search_sdelivedmonth', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('開始日', 'search_sdelivedday', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('終了年', 'search_edelivedyear', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('終了月', 'search_edelivedmonth', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('終了日', 'search_edelivedday', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
+        }
+        if (strpos($class_name, 'LC_Page_Admin_Order_Edit') !== false) {
+            $param->addParam('荷物追跡番号', 'plg_shippingadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
         }
     }
 
@@ -383,13 +388,31 @@ class ShippingAdmin extends SC_Plugin_Base {
     {
         // 絞り込み条件を追加する
         switch ($key){
-            case 'search_plg_deliveadmin_tracking_no':
+            case 'search_plg_shippingadmin_tracking_no':
                 $where .= ' AND plg_shippingadmin_tracking_no LIKE ?';
                 $arrValues[] = sprintf('%%%s%%', $objFormParam->getValue($key));
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+    * 受注情報更新.
+    *
+    * @param  integer $order_id  受注ID
+    * @param  array   $arrParams 更新情報の連想配列
+    * @return void
+    */
+    function updateOrder($order_id, $arrParams) {
+        if (!$order_id) { return; }
+        $objQuery =& SC_Query_Ex::getSingletonInstance();
+        $table = 'dtb_order';
+        $where = 'order_id = ?';
+        $arrValues = $objQuery->extractOnlyColsOf($table, $arrParams);
+        $arrValues['update_date'] = 'CURRENT_TIMESTAMP';
+        $objQuery->update($table, $arrValues, $where, array($order_id));
+        print_r($arrParams);
     }
 
 }
