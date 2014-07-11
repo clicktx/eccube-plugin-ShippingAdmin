@@ -166,7 +166,6 @@ class ShippingAdmin extends SC_Plugin_Base {
                 // 管理機能 受注管理
                 if(strpos($filename, "order/index.tpl") !== false) {
                     $objTransform->select("form#search_form table", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_search_form.tpl"));
-                    // $objTransform->select("div.btn-area", 0)->insertAfter(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_btn-area.tpl"));
                     $objTransform->select("form#form1")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_form1.tpl"));
                     // mode == delete の場合
                     $objTransform->select("form#form1")->appendFirst('***通常の検索結果***');
