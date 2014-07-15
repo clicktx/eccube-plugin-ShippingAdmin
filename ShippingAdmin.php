@@ -176,6 +176,10 @@ class ShippingAdmin extends SC_Plugin_Base {
                     $objTransform->select("table", 5)->insertBefore("<h2>配送情報</h2>");
                     $objTransform->select("table", 5)->find("tr", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
                 }
+                // 受注管理＞対応状況管理
+                elseif(strpos($filename, "order/status.tpl") !== false) {
+                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status.tpl"));
+                }
                 break;
         }
         $source = $objTransform->getHTML();
@@ -210,7 +214,8 @@ class ShippingAdmin extends SC_Plugin_Base {
      * @param SC_Helper_Plugin $objHelperPlugin
      */
     function register(SC_Helper_Plugin $objHelperPlugin) {
-        $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_action_before"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
 
         $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
@@ -248,7 +253,7 @@ class ShippingAdmin extends SC_Plugin_Base {
     * @param LC_Page_Admin_Order $objPage 管理受注情報リスト のページクラス.
     * @return void
     */
-    function admin_order_action_before($objPage) {
+    function admin_order_before($objPage) {
         // modeを書き換えて LC_Page_Admin_Order の処理を無効にする
         $mode = $_REQUEST['mode'];
         $_REQUEST['mode'] = 'plg_ShippingAdmin_' . $mode;
@@ -413,6 +418,16 @@ class ShippingAdmin extends SC_Plugin_Base {
         $arrValues['update_date'] = 'CURRENT_TIMESTAMP';
         $objQuery->update($table, $arrValues, $where, array($order_id));
         print_r($arrParams);
+    }
+
+    /**
+    * 管理機能 対応状況管理 のページクラス.
+    *
+    * @param LC_Page_Admin_Order_Status $objPage 管理受注情報リスト のページクラス.
+    * @return void
+    */
+    function admin_order_status_after($objPage) {
+        $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
     }
 
 }
