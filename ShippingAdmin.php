@@ -51,7 +51,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // dtb_orderテーブルに plg_sippingadmin_delive_tracking_no カラムを追加する
+        // dtb_orderテーブルに plg_shippingadmin_delive_tracking_no カラムを追加する
         // memo: レコードが多い場合でもALTER TABLEして大丈夫？
         // memo: index付けたほうが...
         $arrSql = array(
@@ -63,7 +63,11 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
         $objQuery->commit();
 
-        // copy(PLUGIN_UPLOAD_REALDIR . "$class_name/logo.png", PLUGIN_HTML_REALDIR . "$class_name/logo.png");
+        // ファイルのコピー
+        // memo: plugin用HTML_dirにコピーするのでuninnstall時には削除必要ない？
+        if(!file_exists(PLUGIN_HTML_REALDIR . "js"))mkdir(PLUGIN_HTML_REALDIR . "js");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js", PLUGIN_HTML_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js") === false) print_r("失敗");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/plg_ShippingAdmin_index.php", PLUGIN_HTML_REALDIR . "ShippingAdmin/plg_ShippingAdmin_index.php") === false) print_r("失敗");
     }
 
     /**
@@ -78,7 +82,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // plg_sippingadmin_delive_tracking_no カラムを削除する
+        // plg_shippingadmin_delive_tracking_no カラムを削除する
         $arrSql = array(
             "ALTER TABLE dtb_order DROP plg_shippingadmin_tracking_no;",
             // "ALTER TABLE dtb_order_temp DROP plg_shippingadmin_tracking_no;",
