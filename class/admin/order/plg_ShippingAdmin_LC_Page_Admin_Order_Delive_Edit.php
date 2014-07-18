@@ -31,7 +31,7 @@ require_once CLASS_EX_REALDIR . 'page_extends/LC_Page_Ex.php';
  * @author clicktx
  * @version $Id: LC_Page_ShippingAdmin 1 2014-07-17 00:00:00Z $
  */
-class plg_ShippingAdmin_LC_Page_ShippingAdmin extends LC_Page_Ex {
+class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Ex {
 
     // }}}
     // {{{ functions
@@ -43,6 +43,7 @@ class plg_ShippingAdmin_LC_Page_ShippingAdmin extends LC_Page_Ex {
      */
     function init() {
         parent::init();
+        $this->tpl_mainpage = 'order/disp.tpl';
         $this->tpl_title = '配送情報登録';
     }
 
@@ -63,6 +64,8 @@ class plg_ShippingAdmin_LC_Page_ShippingAdmin extends LC_Page_Ex {
      * @return void
      */
     function action() {
+        print_r($this);
+        // $this->setTemplate($this->tpl_mainpage);
     }
 
     /**

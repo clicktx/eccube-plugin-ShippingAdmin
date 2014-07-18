@@ -67,7 +67,9 @@ class ShippingAdmin extends SC_Plugin_Base {
         // memo: plugin用HTML_dirにコピーするのでuninnstall時には削除必要ない？
         if(!file_exists(PLUGIN_HTML_REALDIR . "js"))mkdir(PLUGIN_HTML_REALDIR . "js");
         if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js", PLUGIN_HTML_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js") === false) print_r("失敗");
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/plg_ShippingAdmin_index.php", PLUGIN_HTML_REALDIR . "ShippingAdmin/plg_ShippingAdmin_index.php") === false) print_r("失敗");
+
+        // plugin用HTML_dir以外の場所はアンインストール時に削除する
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) print_r("失敗");
     }
 
     /**
@@ -91,6 +93,9 @@ class ShippingAdmin extends SC_Plugin_Base {
             $objQuery->exec($sql);
         }
         $objQuery->commit();
+
+        // ファイル削除
+        if(SC_Helper_FileManager_Ex::deleteFile(HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false); // TODO エラー処理
     }
 
     /**

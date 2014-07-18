@@ -22,14 +22,14 @@
  */
 
 // {{{ requires
-require_once realpath(dirname(__FILE__)) . '/../../require.php';
-require_once PLUGIN_UPLOAD_REALDIR . 'ShippingAdmin/plg_ShippingAdmin_LC_Page_ShippingAdmin.php';
+require_once '../require.php';
+require_once PLUGIN_UPLOAD_REALDIR . 'ShippingAdmin/class/admin/order/plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit.php';
 
 // }}}
 // {{{ generate page
 
-$objPage = new plg_ShippingAdmin_LC_Page_ShippingAdmin();
-register_shutdown_function(array($objPage, "destroy"));
+$objPage = new plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit();
+register_shutdown_function(array($objPage, 'destroy'));
 $objPage->init();
 $objPage->process();
 ?>

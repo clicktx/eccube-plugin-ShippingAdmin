@@ -53,7 +53,7 @@ plg_ShippingAdmin
                     <td class="center"><!--{$arrPayment[$payment_id]|h}--></td>
                     <td class="right"><!--{$arrStatus[cnt].total|number_format}--></td>
                     <td class="center"><!--{if $arrStatus[cnt].payment_date != ""}--><!--{$arrStatus[cnt].payment_date|sfDispDBDate:false}--><!--{else}-->未入金<!--{/if}--></td>
-                    <td class="plg_delive center" nowrap><!--{if $arrStatus[cnt].status eq 5}--><!--{$arrStatus[cnt].commit_date|sfDispDBDate:false}--><br/ ><!--{assign var=deliv_id value="`$arrStatus[cnt].deliv_id`"}--><!--{$arrDeliv[$deliv_id]}--><br /><!--{$arrStatus[cnt].plg_shippingadmin_tracking_no}--><!--{else}--><a href="<!--{$smarty.const.ROOT_URLPATH}-->plugin/ShippingAdmin/plg_ShippingAdmin_index.php">未発送</a><!--{/if}--></td>
+                    <td class="plg_delive center" nowrap><!--{if $arrStatus[cnt].status eq 5}--><!--{$arrStatus[cnt].commit_date|sfDispDBDate:false}--><br/ ><!--{assign var=deliv_id value="`$arrStatus[cnt].deliv_id`"}--><!--{$arrDeliv[$deliv_id]}--><br /><!--{$arrStatus[cnt].plg_shippingadmin_tracking_no}--><!--{else}--><a href="plg_ShippingAdmin_delive_edit.php">未発送</a><!--{/if}--></td>
                 </tr>
                 <!--{/section}-->
             </table>
