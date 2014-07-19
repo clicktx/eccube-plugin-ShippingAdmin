@@ -67,6 +67,8 @@ class ShippingAdmin extends SC_Plugin_Base {
         // memo: plugin用HTML_dirにコピーするのでuninnstall時には削除必要ない？
         if(!file_exists(PLUGIN_HTML_REALDIR . "js"))mkdir(PLUGIN_HTML_REALDIR . "js");
         if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js", PLUGIN_HTML_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js") === false) print_r("失敗");
+        if(!file_exists(PLUGIN_HTML_REALDIR . "js"))mkdir(PLUGIN_HTML_REALDIR . "css");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/css/plg_ShippingAdmin.css", PLUGIN_HTML_REALDIR . "ShippingAdmin/css/plg_ShippingAdmin.css") === false) print_r("失敗");
 
         // plugin用HTML_dir以外の場所はアンインストール時に削除する
         if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) print_r("失敗");
@@ -173,6 +175,8 @@ class ShippingAdmin extends SC_Plugin_Base {
             default:
             //追加の必要あり admin/order/disp.php?order_id=38
                 $template_dir .= "admin/";
+                // CSS読み込み
+                $objTransform->select("head")->appendChild('<link rel="stylesheet" href="' . ROOT_URLPATH . 'plugin/ShippingAdmin/css/plg_ShippingAdmin.css" type="text/css" media="all">');
 
                 // 管理機能 受注管理
                 if(strpos($filename, "order/index.tpl") !== false) {
