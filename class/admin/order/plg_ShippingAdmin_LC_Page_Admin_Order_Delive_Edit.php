@@ -137,6 +137,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
 
                 if (SC_Utils_Ex::isBlank($this->arrErr)) {
                     print "登録完了！";
+                    $this->tpl_complete = 1;
                 } else {
                     print "mode add error!!";
                 }
@@ -149,9 +150,9 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
 
         $this->arrForm = $objFormParam->getFormParamList();
         $this->arrAllShipping = $objFormParam->getSwapArray($this->arrShippingKeys);
-        $this->tpl_shipping_quantity = count($this->arrAllShipping);
+        // $this->tpl_shipping_quantity = count($this->arrAllShipping);
         $this->arrDelivTime = SC_Helper_Delivery_Ex::getDelivTime($objFormParam->getValue('deliv_id'));
-        $this->arrInfo = SC_Helper_DB_Ex::sfGetBasisData();
+        // $this->arrInfo = SC_Helper_DB_Ex::sfGetBasisData();
 
         $this->setTemplate($this->tpl_mainpage);
     }
