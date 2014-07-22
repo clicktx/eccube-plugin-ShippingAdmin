@@ -1,5 +1,5 @@
 <!--{*
- * SippingAdmin
+ * ShippingAdmin
  *
  * Copyright(c) 2014 clicktx. All Rights Reserved.
  *
