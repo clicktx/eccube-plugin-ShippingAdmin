@@ -51,7 +51,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // dtb_orderテーブルに plg_sippingadmin_delive_tracking_no カラムを追加する
+        // dtb_orderテーブルに plg_shippingadmin_delive_tracking_no カラムを追加する
         // memo: レコードが多い場合でもALTER TABLEして大丈夫？
         // memo: index付けたほうが...
         $arrSql = array(
@@ -63,7 +63,16 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
         $objQuery->commit();
 
-        // copy(PLUGIN_UPLOAD_REALDIR . "$class_name/logo.png", PLUGIN_HTML_REALDIR . "$class_name/logo.png");
+        // ファイルのコピー
+        // memo: plugin用HTML_dirにコピーするのでuninnstall時には削除必要ない？
+        if(!file_exists(PLUGIN_HTML_REALDIR . "js"))mkdir(PLUGIN_HTML_REALDIR . "js");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js", PLUGIN_HTML_REALDIR . "ShippingAdmin/js/jquery.excolorboxform-0.1.3.js") === false) print_r("失敗");
+        if(!file_exists(PLUGIN_HTML_REALDIR . "js"))mkdir(PLUGIN_HTML_REALDIR . "css");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/css/plg_ShippingAdmin.css", PLUGIN_HTML_REALDIR . "ShippingAdmin/css/plg_ShippingAdmin.css") === false) print_r("失敗");
+
+        // plugin用HTML_dir以外の場所はアンインストール時に削除する
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) print_r("失敗");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/templates/admin/order/plg_ShippingAdmin_delive_edit.tpl", TEMPLATE_ADMIN_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.tpl") === false) print_r("失敗");
     }
 
     /**
@@ -78,7 +87,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // plg_sippingadmin_delive_tracking_no カラムを削除する
+        // plg_shippingadmin_delive_tracking_no カラムを削除する
         $arrSql = array(
             "ALTER TABLE dtb_order DROP plg_shippingadmin_tracking_no;",
             // "ALTER TABLE dtb_order_temp DROP plg_shippingadmin_tracking_no;",
@@ -87,6 +96,10 @@ class ShippingAdmin extends SC_Plugin_Base {
             $objQuery->exec($sql);
         }
         $objQuery->commit();
+
+        // ファイル削除
+        if(SC_Helper_FileManager_Ex::deleteFile(HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false); // TODO エラー処理
+        if(SC_Helper_FileManager_Ex::deleteFile(TEMPLATE_ADMIN_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.tpl") === false); // TODO エラー処理
     }
 
     /**
@@ -162,6 +175,8 @@ class ShippingAdmin extends SC_Plugin_Base {
             default:
             //追加の必要あり admin/order/disp.php?order_id=38
                 $template_dir .= "admin/";
+                // CSS読み込み
+                $objTransform->select("head")->appendChild('<link rel="stylesheet" href="' . ROOT_URLPATH . 'plugin/ShippingAdmin/css/plg_ShippingAdmin.css" type="text/css" media="all">');
 
                 // 管理機能 受注管理
                 if(strpos($filename, "order/index.tpl") !== false) {
