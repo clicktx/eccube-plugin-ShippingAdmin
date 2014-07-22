@@ -53,7 +53,7 @@ plg_ShippingAdmin
                     <td class="center"><!--{$arrPayment[$payment_id]|h}--></td>
                     <td class="right"><!--{$arrStatus[cnt].total|number_format}--></td>
                     <td class="center"><!--{if $arrStatus[cnt].payment_date != ""}--><!--{$arrStatus[cnt].payment_date|sfDispDBDate:false}--><!--{else}-->未入金<!--{/if}--></td>
-                    <td class="plg_delive center" nowrap><!--{if $arrStatus[cnt].status eq 5}--><!--{$arrStatus[cnt].commit_date|sfDispDBDate:false}--><br/ ><!--{assign var=deliv_id value="`$arrStatus[cnt].deliv_id`"}--><!--{$arrDeliv[$deliv_id]}--><br /><!--{$arrStatus[cnt].plg_shippingadmin_tracking_no}--><!--{else}--><a href="plg_ShippingAdmin_delive_edit.php?order_id=<!--{$arrStatus[cnt].order_id}-->">未発送</a><!--{/if}--></td>
+                    <td class="plg_delive center" nowrap><a href="plg_ShippingAdmin_delive_edit.php?order_id=<!--{$arrStatus[cnt].order_id}-->"><!--{if $arrStatus[cnt].status eq 5}--><!--{$arrStatus[cnt].commit_date|sfDispDBDate:false}--><br/ ><!--{assign var=deliv_id value="`$arrStatus[cnt].deliv_id`"}--><!--{$arrDeliv[$deliv_id]}--><br /><!--{$arrStatus[cnt].plg_shippingadmin_tracking_no}--><!--{else}-->未発送<!--{/if}--></a></td>
                 </tr>
                 <!--{/section}-->
             </table>
@@ -70,6 +70,7 @@ plg_ShippingAdmin
                 $check.attr('checked', false).parent().parent().css("background-color", default_bg_color);
             }
         });
+
         // 行クリック時に対象チェックボックスをチェックする
         $("table.list tr").click(function(){
             var klass = $(this).attr("class");
@@ -85,18 +86,25 @@ plg_ShippingAdmin
             }
             // return false;
         });
+
         // 荷物追跡番号入力
-        // $html = '<h1>Welcome</h1><input type="text" name="" value="" placeholder="">';
-        // $("td.plg_delive a").click(function(){
-        //     // alert();
-        //     $.colorbox({
-        //         rel: "plg_shippingadmin_content"
-        //         ,right: "10%"
-        //     });
-        // });
-        $("td.plg_delive a").exColorboxForm({
+        var isLastPage, complateContent = false;
+        var option = {
             overlayClose: true
             ,escKey: true
-        });
+            ,onComplete : function(api){
+                isLastPage = !api.getContents().find('form').size();
+                if (isLastPage) {
+                    complateContent = api.getContents().find('.complate-content').html();
+                    api.close();
+                }
+            }
+            ,onClosed : function(api){
+                if (isLastPage) {
+                    api.getTarget().html(complateContent);
+                }
+            }
+        };
+        $("td.plg_delive a").exColorboxForm(option);
     });
 </script>

@@ -35,7 +35,11 @@
 </script>
 
 <!--{if $tpl_complete}-->
-    登録完了
+    <h2>登録完了</h2>
+    <div class="complate-content">
+        <!--{$tpl_deliv_name|h}--><br />
+        <!--{$tpl_plg_shippingadmin_tracking_no|h}-->
+    </div>
 <!--{else}-->
     <!--▼配送情報フォームここから-->
         <!--{* 複数配送先には未対応 *}-->

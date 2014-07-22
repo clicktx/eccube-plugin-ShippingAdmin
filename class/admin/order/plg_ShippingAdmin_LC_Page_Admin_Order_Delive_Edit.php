@@ -134,15 +134,16 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
                 $objFormParam->convParam();
                 $this->arrErr = $this->lfCheckError($objFormParam);
 
-
                 if (SC_Utils_Ex::isBlank($this->arrErr)) {
-                    print "登録完了！";
+                    $deliv_id = $objFormParam->getValue('deliv_id');
+                    // $order_id = $this->doRegister($order_id, $objPurchase, $objFormParam, $message, $arrValuesBefore);
+
+                    $this->tpl_deliv_name = $this->arrDeliv[$deliv_id];
                     $this->tpl_complete = 1;
+                    $this->tpl_plg_shippingadmin_tracking_no = $objFormParam->arrValue['plg_shippingadmin_tracking_no'];
                 } else {
                     print "mode add error!!";
                 }
-                // print_r($objFormParam);
-
                 break;
             default:
                 break;
