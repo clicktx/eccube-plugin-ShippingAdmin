@@ -51,12 +51,11 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // dtb_orderテーブルに plg_shippingadmin_delive_tracking_no カラムを追加する
+        // dtb_shipping テーブルに plg_shippingadmin_tracking_no カラムを追加する
         // memo: レコードが多い場合でもALTER TABLEして大丈夫？
         // memo: index付けたほうが...
         $arrSql = array(
-            "ALTER TABLE dtb_order ADD plg_shippingadmin_tracking_no VARCHAR(20);",
-            // "ALTER TABLE dtb_order_temp ADD plg_shippingadmin_tracking_no VARCHAR(20);",
+            "ALTER TABLE dtb_shipping ADD plg_shippingadmin_tracking_no VARCHAR(30);"
         );
         foreach ($arrSql as $sql) {
             $objQuery->exec($sql);
@@ -87,10 +86,9 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // plg_shippingadmin_delive_tracking_no カラムを削除する
+        // plg_shippingadmin_tracking_no カラムを削除する
         $arrSql = array(
-            "ALTER TABLE dtb_order DROP plg_shippingadmin_tracking_no;",
-            // "ALTER TABLE dtb_order_temp DROP plg_shippingadmin_tracking_no;",
+            "ALTER TABLE dtb_shipping DROP plg_shippingadmin_tracking_no;"
         );
         foreach ($arrSql as $sql) {
             $objQuery->exec($sql);
