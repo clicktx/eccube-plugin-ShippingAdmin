@@ -412,24 +412,6 @@ class ShippingAdmin extends SC_Plugin_Base {
     }
 
     /**
-    * 受注情報更新.
-    *
-    * @param  integer $order_id  受注ID
-    * @param  array   $arrParams 更新情報の連想配列
-    * @return void
-    */
-    function updateOrder($order_id, $arrParams) {
-        if (!$order_id) { return; }
-        $objQuery =& SC_Query_Ex::getSingletonInstance();
-        $table = 'dtb_order';
-        $where = 'order_id = ?';
-        $arrValues = $objQuery->extractOnlyColsOf($table, $arrParams);
-        $arrValues['update_date'] = 'CURRENT_TIMESTAMP';
-        $objQuery->update($table, $arrValues, $where, array($order_id));
-        print_r($arrParams);
-    }
-
-    /**
     * 管理機能 対応状況管理 のページクラス.
     *
     * @param LC_Page_Admin_Order_Status $objPage 管理受注情報リスト のページクラス.
