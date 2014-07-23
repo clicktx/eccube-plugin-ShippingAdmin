@@ -418,6 +418,7 @@ class ShippingAdmin extends SC_Plugin_Base {
     * @return void
     */
     function admin_order_status_after($objPage) {
+        // 配送業者一覧を取得
         $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
     }
 
