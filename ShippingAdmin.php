@@ -234,31 +234,6 @@ class ShippingAdmin extends SC_Plugin_Base {
     }
 
 
-
-    /** memo: mode=csv時の SC_Response_Ex::actionExit(); でエラーがでるための対策
-     * リクエストパラメーター 'mode' を取得する.
-     *
-     * 1. $_REQUEST['mode'] の値を取得する.
-     * 2. 存在しない場合は null を返す.
-     *
-     * mode に, 半角英数字とアンダーバー(_) 以外の文字列が検出された場合は null を
-     * 返す.
-     *
-     * @access protected
-     * @return string|null $_REQUEST['mode'] の文字列
-     */
-    public function getMode()
-    {
-        $pattern = '/^[a-zA-Z0-9_]+$/';
-        $mode = null;
-        if (isset($_REQUEST['mode']) && preg_match($pattern, $_REQUEST['mode'])) {
-            $mode =  $_REQUEST['mode'];
-        }
-
-        return $mode;
-    }
-
-
     /**
     * 管理機能 受注情報リスト.
     *
@@ -354,6 +329,28 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
     }
 
+    /** memo: mode=csv時の SC_Response_Ex::actionExit(); でエラーがでるための対策
+     * リクエストパラメーター 'mode' を取得する.
+     *
+     * 1. $_REQUEST['mode'] の値を取得する.
+     * 2. 存在しない場合は null を返す.
+     *
+     * mode に, 半角英数字とアンダーバー(_) 以外の文字列が検出された場合は null を
+     * 返す.
+     *
+     * @access protected
+     * @return string|null $_REQUEST['mode'] の文字列
+     */
+    public function getMode()
+    {
+        $pattern = '/^[a-zA-Z0-9_]+$/';
+        $mode = null;
+        if (isset($_REQUEST['mode']) && preg_match($pattern, $_REQUEST['mode'])) {
+            $mode =  $_REQUEST['mode'];
+        }
+
+        return $mode;
+    }
 
     /**
      * 入力内容のチェックを行う.
