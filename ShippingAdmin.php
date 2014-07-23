@@ -227,6 +227,7 @@ class ShippingAdmin extends SC_Plugin_Base {
      */
     function register(SC_Helper_Plugin $objHelperPlugin) {
         $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "admin_order_edit_before"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
 
         $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
@@ -412,9 +413,20 @@ class ShippingAdmin extends SC_Plugin_Base {
     }
 
     /**
+    * 管理機能 受注登録(編集) のページクラス.
+    *
+    * @param LC_Page_Admin_Order_Edit $objPage 管理受注登録 のページクラス.
+    * @return void
+    */
+    function admin_order_edit_before($objPage) {
+        // キーワードにplg_shippingadmin_tracking_noを追加しておく
+        array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
+    }
+
+    /**
     * 管理機能 対応状況管理 のページクラス.
     *
-    * @param LC_Page_Admin_Order_Status $objPage 管理受注情報リスト のページクラス.
+    * @param LC_Page_Admin_Order_Status $objPage 管理対応状況管理 のページクラス.
     * @return void
     */
     function admin_order_status_after($objPage) {
