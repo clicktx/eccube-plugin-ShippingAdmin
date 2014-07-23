@@ -186,8 +186,7 @@ class ShippingAdmin extends SC_Plugin_Base {
                 // 受注情報登録・編集画面
                 elseif(strpos($filename, "order/edit.tpl") !== false) {
                     $objTransform->select("div")->insertBefore("ShippingAdminカブっていても別プラグインなら大丈夫？");
-                    $objTransform->select("table", 5)->insertBefore("<h2>配送情報</h2>");
-                    $objTransform->select("table", 5)->find("tr", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
                 }
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
