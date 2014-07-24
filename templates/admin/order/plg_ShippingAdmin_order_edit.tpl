@@ -24,7 +24,7 @@
                 <th>荷物追跡番号</th>
                 <td>
                     <!--{assign var=key1 value="plg_shippingadmin_tracking_no"}-->
-                    <span class="attention"><!--{$arrErr[$key1]}--></span>
-                    <input type="text" name="<!--{$key1}-->" value="<!--{$arrForm[$key1].value|h}-->" maxlength="<!--{$arrForm[$key1].length}-->" style="<!--{$arrErr[$key1]|sfGetErrorColor}-->" size="30" class="box30" />
+                    <span class="attention"><!--{$arrErr[$key1][$shipping_index]}--></span>
+                    <input type="text" name="<!--{$key1}-->[<!--{$shipping_index}-->]" value="<!--{$arrShipping[$key1]|h}-->" style="<!--{$arrErr[$key1][$shipping_index]|sfGetErrorColor}-->" size="30" class="box30" />
                 </td>
             </tr>

@@ -51,12 +51,11 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // dtb_orderテーブルに plg_shippingadmin_delive_tracking_no カラムを追加する
+        // dtb_shipping テーブルに plg_shippingadmin_tracking_no カラムを追加する
         // memo: レコードが多い場合でもALTER TABLEして大丈夫？
         // memo: index付けたほうが...
         $arrSql = array(
-            "ALTER TABLE dtb_order ADD plg_shippingadmin_tracking_no VARCHAR(20);",
-            // "ALTER TABLE dtb_order_temp ADD plg_shippingadmin_tracking_no VARCHAR(20);",
+            "ALTER TABLE dtb_shipping ADD plg_shippingadmin_tracking_no VARCHAR(30);"
         );
         foreach ($arrSql as $sql) {
             $objQuery->exec($sql);
@@ -87,10 +86,9 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objQuery =& SC_Query_Ex::getSingletonInstance();
         $objQuery->begin();
 
-        // plg_shippingadmin_delive_tracking_no カラムを削除する
+        // plg_shippingadmin_tracking_no カラムを削除する
         $arrSql = array(
-            "ALTER TABLE dtb_order DROP plg_shippingadmin_tracking_no;",
-            // "ALTER TABLE dtb_order_temp DROP plg_shippingadmin_tracking_no;",
+            "ALTER TABLE dtb_shipping DROP plg_shippingadmin_tracking_no;"
         );
         foreach ($arrSql as $sql) {
             $objQuery->exec($sql);
@@ -188,8 +186,7 @@ class ShippingAdmin extends SC_Plugin_Base {
                 // 受注情報登録・編集画面
                 elseif(strpos($filename, "order/edit.tpl") !== false) {
                     $objTransform->select("div")->insertBefore("ShippingAdminカブっていても別プラグインなら大丈夫？");
-                    $objTransform->select("table", 5)->insertBefore("<h2>配送情報</h2>");
-                    $objTransform->select("table", 5)->find("tr", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
                 }
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
@@ -230,35 +227,11 @@ class ShippingAdmin extends SC_Plugin_Base {
      */
     function register(SC_Helper_Plugin $objHelperPlugin) {
         $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "admin_order_edit_before"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
 
         $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
-    }
-
-
-
-    /** memo: mode=csv時の SC_Response_Ex::actionExit(); でエラーがでるための対策
-     * リクエストパラメーター 'mode' を取得する.
-     *
-     * 1. $_REQUEST['mode'] の値を取得する.
-     * 2. 存在しない場合は null を返す.
-     *
-     * mode に, 半角英数字とアンダーバー(_) 以外の文字列が検出された場合は null を
-     * 返す.
-     *
-     * @access protected
-     * @return string|null $_REQUEST['mode'] の文字列
-     */
-    public function getMode()
-    {
-        $pattern = '/^[a-zA-Z0-9_]+$/';
-        $mode = null;
-        if (isset($_REQUEST['mode']) && preg_match($pattern, $_REQUEST['mode'])) {
-            $mode =  $_REQUEST['mode'];
-        }
-
-        return $mode;
     }
 
 
@@ -357,6 +330,28 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
     }
 
+    /** memo: mode=csv時の SC_Response_Ex::actionExit(); でエラーがでるための対策
+     * リクエストパラメーター 'mode' を取得する.
+     *
+     * 1. $_REQUEST['mode'] の値を取得する.
+     * 2. 存在しない場合は null を返す.
+     *
+     * mode に, 半角英数字とアンダーバー(_) 以外の文字列が検出された場合は null を
+     * 返す.
+     *
+     * @access protected
+     * @return string|null $_REQUEST['mode'] の文字列
+     */
+    public function getMode()
+    {
+        $pattern = '/^[a-zA-Z0-9_]+$/';
+        $mode = null;
+        if (isset($_REQUEST['mode']) && preg_match($pattern, $_REQUEST['mode'])) {
+            $mode =  $_REQUEST['mode'];
+        }
+
+        return $mode;
+    }
 
     /**
      * 入力内容のチェックを行う.
@@ -418,30 +413,24 @@ class ShippingAdmin extends SC_Plugin_Base {
     }
 
     /**
-    * 受注情報更新.
+    * 管理機能 受注登録(編集) のページクラス.
     *
-    * @param  integer $order_id  受注ID
-    * @param  array   $arrParams 更新情報の連想配列
+    * @param LC_Page_Admin_Order_Edit $objPage 管理受注登録 のページクラス.
     * @return void
     */
-    function updateOrder($order_id, $arrParams) {
-        if (!$order_id) { return; }
-        $objQuery =& SC_Query_Ex::getSingletonInstance();
-        $table = 'dtb_order';
-        $where = 'order_id = ?';
-        $arrValues = $objQuery->extractOnlyColsOf($table, $arrParams);
-        $arrValues['update_date'] = 'CURRENT_TIMESTAMP';
-        $objQuery->update($table, $arrValues, $where, array($order_id));
-        print_r($arrParams);
+    function admin_order_edit_before($objPage) {
+        // キーワードにplg_shippingadmin_tracking_noを追加しておく
+        array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
     }
 
     /**
     * 管理機能 対応状況管理 のページクラス.
     *
-    * @param LC_Page_Admin_Order_Status $objPage 管理受注情報リスト のページクラス.
+    * @param LC_Page_Admin_Order_Status $objPage 管理対応状況管理 のページクラス.
     * @return void
     */
     function admin_order_status_after($objPage) {
+        // 配送業者一覧を取得
         $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
     }
 
