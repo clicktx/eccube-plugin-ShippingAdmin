@@ -96,7 +96,7 @@ plg_ShippingAdmin
                 isLastPage = !api.getContents().find('form').size();
                 if (isLastPage) {
                     complateContent = api.getContents().find('.complate-content').html();
-                    api.close();
+                    // api.close();
                 }
             }
             ,onClosed : function(api){

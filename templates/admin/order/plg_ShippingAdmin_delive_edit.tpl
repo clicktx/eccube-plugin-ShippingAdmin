@@ -55,7 +55,7 @@
             <table class="form">
                 <tr>
                     <th>配送業者</th>
-                    <td>
+                    <td>onchange="eccube.setModeAndSubmit('deliv','anchor_key','deliv');"
                         <!--{assign var=key value="deliv_id"}-->
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <select name="<!--{$key}-->" style="<!--{$arrErr[$key]|sfGetErrorColor}-->">
