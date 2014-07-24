@@ -29,7 +29,7 @@
         if (!$select.val()){
             $select.focus();
         } else {
-            $("input[name=plg_shippingadmin_tracking_no]").focus();
+            $("input[type=text]:first").focus();
         }
     });
 </script>
