@@ -283,6 +283,38 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
         // 受注テーブルの更新(配送業者のみ更新)
         $arrDeliv = array('deliv_id' => $arrValues['deliv_id']);
         $order_id = $objPurchase->registerOrder($order_id, $arrDeliv);
+
+        // 配送情報テーブルの更新
+        $arrDelivTime = SC_Helper_Delivery_Ex::getDelivTime($objFormParam->getValue('deliv_id'));
+        $arrAllShipping = $objFormParam->getSwapArray($this->arrShippingKeys);
+        $arrShippingValues = array();
+        foreach ($arrAllShipping as $shipping_index => $arrShipping) {
+            $shipping_id = $arrShipping['shipping_id'];
+            $arrShippingValues[$shipping_index] = $arrShipping;
+
+            $arrShippingValues[$shipping_index]['shipping_date']
+                = SC_Utils_Ex::sfGetTimestamp($arrShipping['shipping_date_year'],
+                                              $arrShipping['shipping_date_month'],
+                                              $arrShipping['shipping_date_day']);
+            // 配送業者IDを取得
+            $arrShippingValues[$shipping_index]['deliv_id'] = $objFormParam->getValue('deliv_id');
+
+            // お届け時間名称を取得
+            $arrShippingValues[$shipping_index]['shipping_time'] = $arrDelivTime[$arrShipping['time_id']];
+        }
+
+        $objQuery =& SC_Query_Ex::getSingletonInstance();
+        $table = 'dtb_shipping';
+        $where = 'order_id = ? AND shipping_id = ?';
+
+        $objQuery->begin();
+        foreach ($arrShippingValues as $key => $arrShipping) {
+            $arrValues = $objQuery->extractOnlyColsOf($table, $arrShipping);
+            $arrValues['order_id'] = $order_id;
+            $arrValues['update_date'] = 'CURRENT_TIMESTAMP';
+            $objQuery->update($table, $arrValues, $where, array($order_id, $arrValues['shipping_id']));
+        }
+        $objQuery->commit();
     }
 }
 ?>
