@@ -124,7 +124,6 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
         $objFormParam->setParam($_REQUEST);
         $objFormParam->convParam();
         $order_id = $objFormParam->getValue('order_id');
-        $arrValuesBefore = array();
 
         // DBから受注情報を読み込む
         $this->setOrderToFormParam($objFormParam, $order_id);
@@ -137,7 +136,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
 
                 if (SC_Utils_Ex::isBlank($this->arrErr)) {
                     $deliv_id = $objFormParam->getValue('deliv_id');
-                    // $order_id = $this->doRegister($order_id, $objPurchase, $objFormParam, $message, $arrValuesBefore);
+                    $order_id = $this->doUpdateDB($order_id, $objPurchase, $objFormParam);
 
                     $this->tpl_deliv_name = $this->arrDeliv[$deliv_id];
                     $this->tpl_complete = 1;
@@ -265,6 +264,25 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
         //     $arrCustomer = SC_Helper_Customer_Ex::sfGetCustomerDataFromId($objFormParam->getValue('customer_id'));
         //     $objFormParam->setValue('customer_point', $arrCustomer['point']);
         // }
+    }
+
+    /**
+     * DB更新処理
+     *
+     * @param  integer            $order_id        受注ID
+     * @param  SC_Helper_Purchase $objPurchase     SC_Helper_Purchase インスタンス
+     * @param  SC_FormParam       $objFormParam    SC_FormParam インスタンス
+     * @return integer            $order_id 受注ID
+     *
+     * エラー発生時は負数を返す。
+     */
+    public function doUpdateDB($order_id, &$objPurchase, &$objFormParam)
+    {
+        $arrValues = $objFormParam->getDbArray();
+
+        // 受注テーブルの更新(配送業者のみ更新)
+        $arrDeliv = array('deliv_id' => $arrValues['deliv_id']);
+        $order_id = $objPurchase->registerOrder($order_id, $arrDeliv);
     }
 }
 ?>
