@@ -47,10 +47,6 @@
     </div>
 <!--{else}-->
     <!--▼配送情報フォームここから-->
-        <!--{* 複数配送先には未対応 *}-->
-        <!--{if count($arrAllShipping) > 1}-->
-            <span class="attention">複数配送先には未対応です</span>
-        <!--{/if}-->
     <form name="form1" id="form1" method="post" action="?">
             <input type="hidden" name="<!--{$smarty.const.TRANSACTION_ID_NAME}-->" value="<!--{$transactionid}-->" />
             <input type="hidden" name="mode" value="edit" />
