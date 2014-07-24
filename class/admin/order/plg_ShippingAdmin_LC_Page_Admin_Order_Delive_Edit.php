@@ -57,6 +57,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
         'shipping_date_month',
         'shipping_date_day',
         'time_id',
+        'plg_shippingadmin_tracking_no',
     );
 
     // public $arrShipmentItemKeys = array(
@@ -140,7 +141,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
 
                     $this->tpl_deliv_name = $this->arrDeliv[$deliv_id];
                     $this->tpl_complete = 1;
-                    $this->tpl_plg_shippingadmin_tracking_no = $objFormParam->arrValue['plg_shippingadmin_tracking_no'];
+                    $this->arrTrackingNo = $objFormParam->arrValue['plg_shippingadmin_tracking_no'];
                 } else {
                     print "mode add error!!";
                 }
