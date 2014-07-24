@@ -51,8 +51,7 @@
             <input type="hidden" name="<!--{$smarty.const.TRANSACTION_ID_NAME}-->" value="<!--{$transactionid}-->" />
             <input type="hidden" name="mode" value="edit" />
             <input type="hidden" name="order_id" value="<!--{$arrForm.order_id.value|h}-->" />
-        <!--{foreach name=shipping from=$arrAllShipping item=arrShipping key=shipping_index}-->
-            <h2>お届け先<!--{$smarty.foreach.shipping.iteration}--></h2>
+            <h2>配送業者</h2>
             <table class="form">
                 <tr>
                     <th>配送業者</th>
@@ -65,6 +64,10 @@
                         </select>
                     </td>
                 </tr>
+            </table>
+        <!--{foreach name=shipping from=$arrAllShipping item=arrShipping key=shipping_index}-->
+            <h2>お届け先<!--{$smarty.foreach.shipping.iteration}--></h2>
+            <table class="form">
                 <tr>
                     <th>お届け日</th>
                     <td>
