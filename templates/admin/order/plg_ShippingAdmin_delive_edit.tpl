@@ -51,14 +51,15 @@
             <input type="hidden" name="<!--{$smarty.const.TRANSACTION_ID_NAME}-->" value="<!--{$transactionid}-->" />
             <input type="hidden" name="mode" value="edit" />
             <input type="hidden" name="order_id" value="<!--{$arrForm.order_id.value|h}-->" />
+            <input type="hidden" name="anchor_key" value="" />
             <h2>配送業者</h2>
             <table class="form">
                 <tr>
                     <th>配送業者</th>
-                    <td>onchange="eccube.setModeAndSubmit('deliv','anchor_key','deliv');"
+                    <td>
                         <!--{assign var=key value="deliv_id"}-->
                         <span class="attention"><!--{$arrErr[$key]}--></span>
-                        <select name="<!--{$key}-->" style="<!--{$arrErr[$key]|sfGetErrorColor}-->">
+                        <select name="<!--{$key}-->" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" onchange="eccube.setModeAndSubmit('deliv','anchor_key','deliv_id');">
                             <option value="" selected="">選択してください</option>
                             <!--{html_options options=$arrDeliv selected=$arrForm[$key].value}-->
                         </select>

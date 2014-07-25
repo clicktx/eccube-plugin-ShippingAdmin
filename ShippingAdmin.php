@@ -171,7 +171,6 @@ class ShippingAdmin extends SC_Plugin_Base {
             // 端末種別：管理画面
             case DEVICE_TYPE_ADMIN:
             default:
-            //追加の必要あり admin/order/disp.php?order_id=38
                 $template_dir .= "admin/";
                 // CSS読み込み
                 $objTransform->select("head")->appendChild('<link rel="stylesheet" href="' . ROOT_URLPATH . 'plugin/ShippingAdmin/css/plg_ShippingAdmin.css" type="text/css" media="all">');
@@ -191,6 +190,10 @@ class ShippingAdmin extends SC_Plugin_Base {
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
                     $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status.tpl"));
+                }
+                // 管理機能＞受注情報表示
+                elseif(strpos($filename, "order/disp.tpl") !== false) {
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_disp.tpl"));
                 }
                 break;
         }
@@ -214,7 +217,9 @@ class ShippingAdmin extends SC_Plugin_Base {
             $param->addParam('終了月', 'search_edelivedmonth', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('終了日', 'search_edelivedday', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
         }
-        if (strpos($class_name, 'LC_Page_Admin_Order_Edit') !== false) {
+        if (strpos($class_name, 'LC_Page_Admin_Order_Edit') !== false
+                or strpos($class_name, 'LC_Page_Admin_Order_Disp') !== false
+        ) {
             $param->addParam('荷物追跡番号', 'plg_shippingadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
         }
     }
@@ -226,14 +231,26 @@ class ShippingAdmin extends SC_Plugin_Base {
      * @param SC_Helper_Plugin $objHelperPlugin
      */
     function register(SC_Helper_Plugin $objHelperPlugin) {
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Disp_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
-        $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "admin_order_edit_before"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
 
         $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
     }
 
+
+    /**
+    * 管理機能 受注登録(編集)、受注情報表示
+    *
+    * @param  $objPage
+    * @return void
+    */
+    function push_arrShippingKeys($objPage) {
+        // キーワードにplg_shippingadmin_tracking_noを追加しておく
+        array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
+    }
 
     /**
     * 管理機能 受注情報リスト.
@@ -257,8 +274,8 @@ class ShippingAdmin extends SC_Plugin_Base {
         switch ($objPage->getMode()) {
             // 削除
             case 'plg_ShippingAdmin_delete':
-                // $order_id = $objFormParam->getValue('order_id');
-                // $objPurchase->cancelOrder($order_id, ORDER_CANCEL, true);
+                $order_id = $objFormParam->getValue('order_id');
+                $objPurchase->cancelOrder($order_id, ORDER_CANCEL, true);
                 // 削除後に検索結果を表示するため breakしない
 
             // 検索パラメーター生成後に処理実行するため breakしない
@@ -403,24 +420,27 @@ class ShippingAdmin extends SC_Plugin_Base {
     {
         // 絞り込み条件を追加する
         switch ($key){
+            case 'search_sdelivedyear':
+                $date = SC_Utils_Ex::sfGetTimestamp($objFormParam->getValue('search_sdelivedyear'),
+                                                    $objFormParam->getValue('search_sdelivedmonth'),
+                                                    $objFormParam->getValue('search_sdelivedday'));
+                $where.= ' AND commit_date >= ?';
+                $arrValues[] = $date;
+                break;
+            case 'search_edelivedyear':
+                $date = SC_Utils_Ex::sfGetTimestamp($objFormParam->getValue('search_edelivedyear'),
+                                                    $objFormParam->getValue('search_edelivedmonth'),
+                                                    $objFormParam->getValue('search_edelivedday'), true);
+                $where.= ' AND commit_date <= ?';
+                $arrValues[] = $date;
+                break;
             case 'search_plg_shippingadmin_tracking_no':
-                $where .= ' AND plg_shippingadmin_tracking_no LIKE ?';
+                $where .= ' AND EXISTS (SELECT 1 FROM dtb_shipping ds WHERE ds.order_id = dtb_order.order_id AND ds.plg_shippingadmin_tracking_no LIKE ?)';
                 $arrValues[] = sprintf('%%%s%%', $objFormParam->getValue($key));
                 break;
             default:
                 break;
         }
-    }
-
-    /**
-    * 管理機能 受注登録(編集) のページクラス.
-    *
-    * @param LC_Page_Admin_Order_Edit $objPage 管理受注登録 のページクラス.
-    * @return void
-    */
-    function admin_order_edit_before($objPage) {
-        // キーワードにplg_shippingadmin_tracking_noを追加しておく
-        array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
     }
 
     /**
