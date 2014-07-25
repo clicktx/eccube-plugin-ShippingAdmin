@@ -171,7 +171,6 @@ class ShippingAdmin extends SC_Plugin_Base {
             // 端末種別：管理画面
             case DEVICE_TYPE_ADMIN:
             default:
-            //追加の必要あり admin/order/disp.php?order_id=38
                 $template_dir .= "admin/";
                 // CSS読み込み
                 $objTransform->select("head")->appendChild('<link rel="stylesheet" href="' . ROOT_URLPATH . 'plugin/ShippingAdmin/css/plg_ShippingAdmin.css" type="text/css" media="all">');
@@ -191,6 +190,10 @@ class ShippingAdmin extends SC_Plugin_Base {
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
                     $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status.tpl"));
+                }
+                // 管理機能＞受注情報表示
+                elseif(strpos($filename, "order/disp.tpl") !== false) {
+                    $objTransform->select("table.form", 2)->appendChild("<tr><th>荷物追跡番号</th><td>***荷物追跡番号***</td></tr>");
                 }
                 break;
         }
