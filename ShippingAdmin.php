@@ -193,7 +193,7 @@ class ShippingAdmin extends SC_Plugin_Base {
                 }
                 // 管理機能＞受注情報表示
                 elseif(strpos($filename, "order/disp.tpl") !== false) {
-                    $objTransform->select("table.form", 2)->appendChild("<tr><th>荷物追跡番号</th><td>***荷物追跡番号***</td></tr>");
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
                 }
                 break;
         }
