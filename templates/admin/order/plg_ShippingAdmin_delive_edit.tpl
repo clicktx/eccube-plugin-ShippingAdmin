@@ -29,7 +29,7 @@
         if (!$select.val()){
             $select.focus();
         } else {
-            $("input[name=plg_shippingadmin_tracking_no]").focus();
+            $("input[type=text]:first").focus();
         }
     });
 </script>
@@ -38,24 +38,24 @@
     <h2>登録完了</h2>
     <div class="complate-content">
         <!--{$tpl_deliv_name|h}--><br />
-        <!--{$tpl_plg_shippingadmin_tracking_no|h}-->
+        <!--{foreach name=shipping from=$arrTrackingNo item=arrShipping key=shipping_index}-->
+            <!--{if count($arrTrackingNo) > 1}-->
+                お届け先<!--{$smarty.foreach.shipping.iteration}-->:
+            <!--{/if}-->
+            <!--{$arrShipping}--><br />
+        <!--{/foreach}-->
     </div>
 <!--{else}-->
     <!--▼配送情報フォームここから-->
-        <!--{* 複数配送先には未対応 *}-->
-        <!--{if count($arrAllShipping) > 1}-->
-            <span class="attention">複数配送先には未対応です</span>
-        <!--{/if}-->
     <form name="form1" id="form1" method="post" action="?">
             <input type="hidden" name="<!--{$smarty.const.TRANSACTION_ID_NAME}-->" value="<!--{$transactionid}-->" />
             <input type="hidden" name="mode" value="edit" />
             <input type="hidden" name="order_id" value="<!--{$arrForm.order_id.value|h}-->" />
-        <!--{foreach name=shipping from=$arrAllShipping item=arrShipping key=shipping_index}-->
-            <h2>配送情報</h2>
+            <h2>配送業者</h2>
             <table class="form">
                 <tr>
                     <th>配送業者</th>
-                    <td>
+                    <td>onchange="eccube.setModeAndSubmit('deliv','anchor_key','deliv');"
                         <!--{assign var=key value="deliv_id"}-->
                         <span class="attention"><!--{$arrErr[$key]}--></span>
                         <select name="<!--{$key}-->" style="<!--{$arrErr[$key]|sfGetErrorColor}-->">
@@ -64,14 +64,10 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
-                    <th>荷物追跡番号</th>
-                    <td>
-                        <!--{assign var=key1 value="plg_shippingadmin_tracking_no"}-->
-                        <span class="attention"><!--{$arrErr[$key1]}--></span>
-                        <input type="text" name="<!--{$key1}-->" value="<!--{$arrForm[$key1].value|h}-->" maxlength="<!--{$arrForm[$key1].length}-->" style="<!--{$arrErr[$key1]|sfGetErrorColor}-->" size="30" class="box30" />
-                    </td>
-                </tr>
+            </table>
+        <!--{foreach name=shipping from=$arrAllShipping item=arrShipping key=shipping_index}-->
+            <h2>お届け先<!--{$smarty.foreach.shipping.iteration}--></h2>
+            <table class="form">
                 <tr>
                     <th>お届け日</th>
                     <td>
@@ -101,6 +97,14 @@
                             <option value="">指定無し</option>
                             <!--{html_options options=$arrDelivTime selected=$arrShipping[$key]}-->
                         </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>荷物追跡番号</th>
+                    <td>
+                        <!--{assign var=key1 value="plg_shippingadmin_tracking_no"}-->
+                        <span class="attention"><!--{$arrErr[$key1][$shipping_index]}--></span>
+                        <input type="text" name="<!--{$key1}-->[<!--{$shipping_index}-->]" value="<!--{$arrShipping[$key1]|h}-->" style="<!--{$arrErr[$key1][$shipping_index]|sfGetErrorColor}-->" size="30" class="box30" />
                     </td>
                 </tr>
             </table>
