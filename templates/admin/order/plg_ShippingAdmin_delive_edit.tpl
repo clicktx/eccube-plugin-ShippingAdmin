@@ -40,7 +40,7 @@
         <!--{$tpl_deliv_name|h}--><br />
         <!--{foreach name=shipping from=$arrTrackingNo item=arrShipping key=shipping_index}-->
             <!--{if count($arrTrackingNo) > 1}-->
-                お届け先<!--{$smarty.foreach.shipping.iteration}-->:
+                配送先<!--{$smarty.foreach.shipping.iteration}-->:
             <!--{/if}-->
             <!--{$arrShipping}--><br />
         <!--{/foreach}-->
