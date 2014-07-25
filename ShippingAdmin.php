@@ -274,8 +274,8 @@ class ShippingAdmin extends SC_Plugin_Base {
         switch ($objPage->getMode()) {
             // 削除
             case 'plg_ShippingAdmin_delete':
-                // $order_id = $objFormParam->getValue('order_id');
-                // $objPurchase->cancelOrder($order_id, ORDER_CANCEL, true);
+                $order_id = $objFormParam->getValue('order_id');
+                $objPurchase->cancelOrder($order_id, ORDER_CANCEL, true);
                 // 削除後に検索結果を表示するため breakしない
 
             // 検索パラメーター生成後に処理実行するため breakしない
