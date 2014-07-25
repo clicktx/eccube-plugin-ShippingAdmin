@@ -217,7 +217,9 @@ class ShippingAdmin extends SC_Plugin_Base {
             $param->addParam('終了月', 'search_edelivedmonth', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('終了日', 'search_edelivedday', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'));
         }
-        if (strpos($class_name, 'LC_Page_Admin_Order_Edit') !== false) {
+        if (strpos($class_name, 'LC_Page_Admin_Order_Edit') !== false
+                or strpos($class_name, 'LC_Page_Admin_Order_Disp') !== false
+        ) {
             $param->addParam('荷物追跡番号', 'plg_shippingadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
         }
     }

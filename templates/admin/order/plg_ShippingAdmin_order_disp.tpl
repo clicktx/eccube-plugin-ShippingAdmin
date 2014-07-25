@@ -23,7 +23,6 @@
             <tr>
                 <th>荷物追跡番号</th>
                 <td>
-                    <!--{assign var=key1 value="plg_shippingadmin_tracking_no"}-->
-                    <!--{$arrShipping}--><!--{$shipping_index}-->
+                    <!--{$arrShipping.plg_shippingadmin_tracking_no}-->
                 </td>
             </tr>
