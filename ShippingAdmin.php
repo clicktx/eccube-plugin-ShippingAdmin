@@ -404,7 +404,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         // 絞り込み条件を追加する
         switch ($key){
             case 'search_plg_shippingadmin_tracking_no':
-                $where .= ' AND plg_shippingadmin_tracking_no LIKE ?';
+                $where .= ' AND EXISTS (SELECT 1 FROM dtb_shipping ds WHERE ds.order_id = dtb_order.order_id AND ds.plg_shippingadmin_tracking_no LIKE ?)';
                 $arrValues[] = sprintf('%%%s%%', $objFormParam->getValue($key));
                 break;
             default:
