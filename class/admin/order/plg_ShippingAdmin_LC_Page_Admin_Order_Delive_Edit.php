@@ -145,6 +145,10 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
                     print "mode add error!!";
                 }
                 break;
+            case 'deliv':
+                $objFormParam->setParam($_POST);
+                $objFormParam->convParam();
+                break;
             default:
                 break;
         }
