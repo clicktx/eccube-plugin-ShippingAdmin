@@ -432,6 +432,13 @@ class ShippingAdmin extends SC_Plugin_Base {
     function admin_order_status_after($objPage) {
         // 配送業者一覧を取得
         $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
+        // 配送情報を取得
+        $objPurchase = new SC_Helper_Purchase_Ex();
+        foreach ($objPage->arrStatus as $key_index => $value) {
+            $order_id = $objPage->arrStatus[$key_index]['order_id'];
+            $arrShippings = $objPurchase->getShippings($order_id, false);
+            $objPage->arrStatus[$key_index]['shippings'] = $arrShippings;
+        }
     }
 
 }
