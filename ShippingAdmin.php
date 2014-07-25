@@ -239,6 +239,17 @@ class ShippingAdmin extends SC_Plugin_Base {
 
 
     /**
+    * 管理機能 受注登録(編集)、受注情報表示
+    *
+    * @param  $objPage
+    * @return void
+    */
+    function push_arrShippingKeys($objPage) {
+        // キーワードにplg_shippingadmin_tracking_noを追加しておく
+        array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
+    }
+
+    /**
     * 管理機能 受注情報リスト.
     *
     * @param LC_Page_Admin_Order $objPage 管理受注情報リスト のページクラス.
@@ -413,17 +424,6 @@ class ShippingAdmin extends SC_Plugin_Base {
             default:
                 break;
         }
-    }
-
-    /**
-    * 管理機能 受注登録(編集) のページクラス.
-    *
-    * @param LC_Page_Admin_Order_Edit $objPage 管理受注登録 のページクラス.
-    * @return void
-    */
-    function push_arrShippingKeys($objPage) {
-        // キーワードにplg_shippingadmin_tracking_noを追加しておく
-        array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
     }
 
     /**
