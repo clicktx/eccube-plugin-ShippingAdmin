@@ -35,7 +35,6 @@
         $(document).bind('keydown', function (e) {
         var key = e.keyCode;
             if (key === 27) {
-                // e.preventDefault();
                 parent.jQuery.colorbox.close();
             }
         });
@@ -122,6 +121,7 @@
         <div class="btn-area">
             <ul>
                 <li><button class="btn-action"><span class="btn-next">この内容で登録する</span></button></li>
+                <li><button class="colorbox-close"><span class="btn-next">閉じる</span></button></li>
             </ul>
         </div>
 
