@@ -106,8 +106,6 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
                     $this->tpl_deliv_name = $this->arrDeliv[$deliv_id];
                     $this->tpl_complete = 1;
                     $this->arrTrackingNo = $objFormParam->arrValue['plg_shippingadmin_tracking_no'];
-                } else {
-                    print "mode add error!!";
                 }
                 break;
             case 'deliv':
