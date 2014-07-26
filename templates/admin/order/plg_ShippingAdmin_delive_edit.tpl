@@ -31,6 +31,14 @@
         } else {
             $("input[type=text]:first").focus();
         }
+        // window close esc key
+        $(document).bind('keydown', function (e) {
+        var key = e.keyCode;
+            if (key === 27) {
+                // e.preventDefault();
+                parent.jQuery.colorbox.close();
+            }
+        });
     });
 </script>
 
