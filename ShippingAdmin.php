@@ -223,6 +223,10 @@ class ShippingAdmin extends SC_Plugin_Base {
         ) {
             $param->addParam('荷物追跡番号', 'plg_shippingadmin_tracking_no', STEXT_LEN, 'n', array('MAX_LENGTH_CHECK'));
         }
+        if ($this->getMode() == 'plg_shippingadmin_update') {
+            $param->addParam('変更後対応状況', 'change_status', STEXT_LEN, 'KVa', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('移動注文番号', 'move', INT_LEN, 'n', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
+        }
     }
 
     /**
@@ -455,11 +459,61 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
         // 配送情報を取得
         $objPurchase = new SC_Helper_Purchase_Ex();
+        $arrAllShippings = [];
         foreach ($objPage->arrStatus as $key_index => $value) {
             $order_id = $objPage->arrStatus[$key_index]['order_id'];
             $arrShippings = $objPurchase->getShippings($order_id, false);
-            $objPage->arrStatus[$key_index]['shippings'] = $arrShippings;
+            $arrAllShippings[$key_index] = $arrShippings;
         }
+
+        // memo: オリジナルのコードと２重で実行することになるが...
+        // パラメーター管理クラス
+        $objFormParam = new SC_FormParam_Ex();
+        // パラメーター情報の初期化
+        $objPage->lfInitParam($objFormParam); // memo: lfInitParam で初期化されないため
+        $objFormParam->setParam($_POST);
+        // 入力値の変換
+        $objFormParam->convParam();
+
+        switch ($objPage->getMode()) {
+            case 'plg_shippingadmin_update':
+                $arrMoveOderId = $objFormParam->getValue('move');
+                print_r($arrMoveOderId);
+
+                // 荷物追跡番号が登録されているかチェック
+            //     break;
+            // case 'update':
+                switch ($objFormParam->getValue('change_status')) {
+                    // 削除
+                    case 'delete':
+                        $objPage->lfDelete($objFormParam->getValue('move'));
+                        break;
+                    // 更新
+                    default:
+                        $objPage->lfStatusMove($objFormParam->getValue('change_status'), $objFormParam->getValue('move'));
+                        break;
+                }
+                break;
+
+            case 'search':
+            default:
+                break;
+        }
+
+        // 対応状況
+        $status = $objFormParam->getValue('status');
+        if (strlen($status) === 0) {
+                //デフォルトで新規受付一覧表示
+                $status = ORDER_NEW;
+        }
+        $objPage->SelectedStatus = $status;
+        // 検索結果の表示
+        $objPage->lfStatusDisp($status, $objFormParam->getValue('search_pageno'));
+        // 配送情報を代入
+        foreach ($arrAllShippings as $key_index => $value) {
+            $objPage->arrStatus[$key_index]['shippings'] = $value;
+        }
+
     }
 
 }
