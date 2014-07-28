@@ -189,7 +189,8 @@ class ShippingAdmin extends SC_Plugin_Base {
                 }
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
-                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status.tpl"));
+                    $objTransform->select("div.btn", 1)->find("a.btn-normal")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status_btn.tpl"));
+                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status_table.tpl"));
                 }
                 // 管理機能＞受注情報表示
                 elseif(strpos($filename, "order/disp.tpl") !== false) {
