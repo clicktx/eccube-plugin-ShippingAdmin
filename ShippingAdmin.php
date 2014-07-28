@@ -455,16 +455,10 @@ class ShippingAdmin extends SC_Plugin_Base {
     * @return void
     */
     function admin_order_status_after($objPage) {
+        $objPurchase = new SC_Helper_Purchase_Ex();
+
         // 配送業者一覧を取得
         $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
-        // 配送情報を取得
-        $objPurchase = new SC_Helper_Purchase_Ex();
-        $arrAllShippings = [];
-        foreach ($objPage->arrStatus as $key_index => $value) {
-            $order_id = $objPage->arrStatus[$key_index]['order_id'];
-            $arrShippings = $objPurchase->getShippings($order_id, false);
-            $arrAllShippings[$key_index] = $arrShippings;
-        }
 
         // memo: オリジナルのコードと２重で実行することになるが...
         // パラメーター管理クラス
@@ -510,10 +504,11 @@ class ShippingAdmin extends SC_Plugin_Base {
         // 検索結果の表示
         $objPage->lfStatusDisp($status, $objFormParam->getValue('search_pageno'));
         // 配送情報を代入
-        foreach ($arrAllShippings as $key_index => $value) {
-            $objPage->arrStatus[$key_index]['shippings'] = $value;
+        foreach ($objPage->arrStatus as $key_index => $value) {
+            $order_id = $objPage->arrStatus[$key_index]['order_id'];
+            $arrShippings = $objPurchase->getShippings($order_id, false);
+            $objPage->arrStatus[$key_index]['shippings'] = $arrShippings;
         }
-
     }
 
 }
