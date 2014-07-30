@@ -35,7 +35,7 @@ class plugin_info {
     /** プラグインメインクラス名(必須)：本体がプラグインを実行する際に呼ばれるクラス。拡張子は不要です。 */
     static $CLASS_NAME         = "ShippingAdmin";
     /** プラグインバージョン(必須) */
-    static $PLUGIN_VERSION     = "0.0.5";
+    static $PLUGIN_VERSION     = "0.1";
     /** 本体対応バージョン(必須) */
     static $COMPLIANT_VERSION  = "2.13.0～2.13.2";
     /** 作者(必須) */
