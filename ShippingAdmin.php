@@ -464,27 +464,39 @@ class ShippingAdmin extends SC_Plugin_Base {
         // パラメーター管理クラス
         $objFormParam = new SC_FormParam_Ex();
         // パラメーター情報の初期化
-        $objPage->lfInitParam($objFormParam); // memo: lfInitParam で初期化されないため
+        $objPage->lfInitParam($objFormParam);
         $objFormParam->setParam($_POST);
         // 入力値の変換
         $objFormParam->convParam();
 
         switch ($objPage->getMode()) {
             case 'plg_shippingadmin_update':
+                $changeStatus = $objFormParam->getValue('change_status');
                 $arrMoveOderId = $objFormParam->getValue('move');
-                print_r($arrMoveOderId);
 
-                // 荷物追跡番号が登録されているかチェック
-            //     break;
-            // case 'update':
-                switch ($objFormParam->getValue('change_status')) {
+                switch ($changeStatus) {
                     // 削除
                     case 'delete':
-                        $objPage->lfDelete($objFormParam->getValue('move'));
+                        // 削除確認がチェックされているか？
+
+                        $objPage->lfDelete($arrMoveOderId);
                         break;
+                    // 発送済み
+                    case '5':
+                        // 発送済みに変更する場合は荷物追跡番号が登録されているかチェック
+                        $checkFlag = 0;
+                        foreach ($arrMoveOderId as $index => $order_id) {
+                            $arrShippings = $objPurchase->getShippings($order_id, false);
+                            $checkFlag += $this->lfCheckTrackingNo($arrShippings);
+                        }
+                        if ($checkFlag){
+                            $objPage->tpl_onload = "window.alert('荷物追跡番号が登録されていないため、選択項目を" . $arrORDERSTATUS[$changeStatus] . "へ移動出来ませんでした');";
+                            break;
+                        }
+                        // 正常の場合はbreak; しない
                     // 更新
                     default:
-                        $objPage->lfStatusMove($objFormParam->getValue('change_status'), $objFormParam->getValue('move'));
+                        $objPage->lfStatusMove($changeStatus, $arrMoveOderId);
                         break;
                 }
                 break;
@@ -511,5 +523,16 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
     }
 
+    /**
+    * 荷物追跡番号が登録されているかチェック
+    * @param
+    */
+    function lfCheckTrackingNo(&$arrShippings){
+        $checkFlag = 0;
+        foreach ($arrShippings as $index => $shippings) {
+            if (!$shippings['plg_shippingadmin_tracking_no']){ ++$checkFlag; }
+        }
+        return $checkFlag;
+    }
 }
 ?>
