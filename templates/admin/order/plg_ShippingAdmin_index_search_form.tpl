@@ -21,6 +21,18 @@
  *}-->
 
             <tr>
+                <th>荷物追跡番号</th>
+                <td>
+                    <!--{assign var=key value="search_plg_shippingadmin_tracking_no"}-->
+                    <!--{if $arrErr[$key]}--><span class="attention"><!--{$arrErr[$key]}--></span><!--{/if}-->
+                    <input type="text" name="<!--{$key}-->" value="<!--{$arrForm[$key].value|h}-->" maxlength="20" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" size="6" class="box30">
+                </td>
+                <th>----</th>
+                <td>
+                    <input type="text" name="search_xxx_xxx" value="" maxlength="50" style="" size="6" class="box30">
+                </td>
+            </tr>
+            <tr>
                 <th>出荷日</th>
                 <td colspan="3">
                     <!--{if $arrErr.search_sdelivedyear}--><span class="attention"><!--{$arrErr.search_sdelivedyear}--></span><!--{/if}-->
@@ -49,17 +61,5 @@
                         <option value="">--</option>
                         <!--{html_options options=$arrDay selected=$arrForm.search_edelivedday.value}-->
                     </select>日
-                </td>
-            </tr>
-            <tr>
-                <th>荷物追跡番号</th>
-                <td>
-                    <!--{assign var=key value="search_plg_shippingadmin_tracking_no"}-->
-                    <!--{if $arrErr[$key]}--><span class="attention"><!--{$arrErr[$key]}--></span><!--{/if}-->
-                    <input type="text" name="<!--{$key}-->" value="<!--{$arrForm[$key].value|h}-->" maxlength="20" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" size="6" class="box30">
-                </td>
-                <th>----</th>
-                <td>
-                    <input type="text" name="search_xxx_xxx" value="" maxlength="50" style="" size="6" class="box30">
                 </td>
             </tr>
