@@ -442,6 +442,10 @@ class ShippingAdmin extends SC_Plugin_Base {
                 $where .= ' AND EXISTS (SELECT 1 FROM dtb_shipping ds WHERE ds.order_id = dtb_order.order_id AND ds.plg_shippingadmin_tracking_no LIKE ?)';
                 $arrValues[] = sprintf('%%%s%%', $objFormParam->getValue($key));
                 break;
+            case 'search_deliv_id':
+                $where.= ' AND deliv_id = ?';
+                $arrValues[] = $objFormParam->getValue($key);
+                break;
             default:
                 break;
         }
