@@ -45,7 +45,7 @@ class plugin_info {
     /** 作者用のサイトURL：設定されている場合はプラグイン管理画面の作者名がリンクになります。 */
     static $AUTHOR_SITE_URL    = "http://perl.no-tubo.net/";
     /** プラグインのサイトURL : 設定されている場合はプラグイン管理画面の作者名がリンクになります。 */
-    static $PLUGIN_SITE_URL   = "";
+    static $PLUGIN_SITE_URL   = "https://github.com/clicktx/eccube-plugin-ShippingAdmin";
     /** 使用するフックポイント：使用するフックポイントを設定すると、フックポイントが競合した際にアラートが出ます。 */
     /**
      * 使用するフックポイント・コールバック関数。
