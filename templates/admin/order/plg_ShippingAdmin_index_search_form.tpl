@@ -21,12 +21,6 @@
  *}-->
 
             <tr>
-                <th>荷物追跡番号</th>
-                <td>
-                    <!--{assign var=key value="search_plg_shippingadmin_tracking_no"}-->
-                    <!--{if $arrErr[$key]}--><span class="attention"><!--{$arrErr[$key]}--></span><!--{/if}-->
-                    <input type="text" name="<!--{$key}-->" value="<!--{$arrForm[$key].value|h}-->" maxlength="20" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" size="6" class="box30">
-                </td>
                 <th>配送業者</th>
                 <td>
                     <!--{assign var=key value="search_deliv_id"}-->
@@ -35,6 +29,12 @@
                         <option value="" selected="">選択してください</option>
                         <!--{html_options options=$arrDeliv selected=$arrForm[$key].value}-->
                     </select>
+                </td>
+                <th>荷物追跡番号</th>
+                <td>
+                    <!--{assign var=key value="search_plg_shippingadmin_tracking_no"}-->
+                    <!--{if $arrErr[$key]}--><span class="attention"><!--{$arrErr[$key]}--></span><!--{/if}-->
+                    <input type="text" name="<!--{$key}-->" value="<!--{$arrForm[$key].value|h}-->" maxlength="20" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" size="6" class="box30">
                 </td>
             </tr>
             <tr>
