@@ -27,9 +27,14 @@
                     <!--{if $arrErr[$key]}--><span class="attention"><!--{$arrErr[$key]}--></span><!--{/if}-->
                     <input type="text" name="<!--{$key}-->" value="<!--{$arrForm[$key].value|h}-->" maxlength="20" style="<!--{$arrErr[$key]|sfGetErrorColor}-->" size="6" class="box30">
                 </td>
-                <th>----</th>
+                <th>配送業者</th>
                 <td>
-                    <input type="text" name="search_xxx_xxx" value="" maxlength="50" style="" size="6" class="box30">
+                    <!--{assign var=key value="search_deliv_id"}-->
+                    <span class="attention"><!--{$arrErr[$key]}--></span>
+                    <select name="<!--{$key}-->" style="<!--{$arrErr[$key]|sfGetErrorColor}-->">
+                        <option value="" selected="">選択してください</option>
+                        <!--{html_options options=$arrDeliv selected=$arrForm[$key].value}-->
+                    </select>
                 </td>
             </tr>
             <tr>
