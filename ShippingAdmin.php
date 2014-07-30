@@ -226,6 +226,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         if ($this->getMode() == 'plg_shippingadmin_update') {
             $param->addParam('変更後対応状況', 'change_status', STEXT_LEN, 'KVa', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('移動注文番号', 'move', INT_LEN, 'n', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('削除確認', 'del_check', INT_LEN, 'n');
         }
     }
 
@@ -478,8 +479,13 @@ class ShippingAdmin extends SC_Plugin_Base {
                     // 削除
                     case 'delete':
                         // 削除確認がチェックされているか？
+                        $del_check = $objFormParam->getValue('del_check');
+                        if ($del_check){
+                            $objPage->lfDelete($arrMoveOderId);
+                        } else {
+                            $objPage->tpl_onload = "window.alert('削除時は削除確認にチェックを入れて下さい。');";
+                        }
 
-                        $objPage->lfDelete($arrMoveOderId);
                         break;
                     // 発送済み
                     case '5':
