@@ -45,8 +45,8 @@
                 </tr>
                 <!--{section name=cnt loop=$arrStatus}-->
                 <!--{assign var=status value="`$arrStatus[cnt].status`"}-->
-                <tr style="background:<!--{$arrORDERSTATUS_COLOR[$status]}-->;" class="<!--{$arrStatus[cnt].order_id}-->">
-                    <td class="center"><input type="checkbox" name="move[]" value="<!--{$arrStatus[cnt].order_id}-->" class="check <!--{$arrStatus[cnt].order_id}-->"></td>
+                <tr style="background:<!--{$arrORDERSTATUS_COLOR[$status]}-->;" id="<!--{$arrStatus[cnt].order_id}-->">
+                    <td class="center"><input type="checkbox" name="move[]" value="<!--{$arrStatus[cnt].order_id}-->" class="check"></td>
                     <td class="center"><!--{$arrORDERSTATUS[$status]}--></td>
                     <td class="center"><a href="#" onclick="eccube.openWindow('./disp.php?order_id=<!--{$arrStatus[cnt].order_id}-->','order_disp','800','900',{resizable:'no',focus:false}); return false;" ><!--{$arrStatus[cnt].order_id}--></a></td>
                     <td class="center"><!--{$arrStatus[cnt].create_date|sfDispDBDate}--></td>
@@ -89,19 +89,19 @@
                 $check.attr('checked', false).parent().parent().css("background-color", default_bg_color);
             }
         });
-
-        // 行クリック時に対象チェックボックスをチェックする
         $("table.list tr").click(function(){
-            var klass = $(this).attr("class");
-            if (!klass){ return }
-            var checked_flag = $("input."+klass).attr('checked');
+            var $id = $(this).attr("id");
+            if (!$id){ return }
+            $child = $(this).children().children();
+            var checked_flag = $($child[0]).attr('checked');
+
             if (checked_flag){
-                $("tr."+klass).css("background-color", default_bg_color);
-                $("input."+klass).attr("checked", false);
+                $(this).css("background-color", default_bg_color);
+                $($child[0]).attr("checked", false);
             }
             else{
-                $("tr."+klass).css("background-color", "#FFCC99");
-                $("input."+klass).attr("checked", true);
+                $(this).css("background-color", "#FFCC99");
+                $($child[0]).attr("checked", true);
             }
             // return false;
         });
