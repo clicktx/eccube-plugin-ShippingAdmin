@@ -81,7 +81,7 @@
     $(function(){
         var default_bg_color = "<!--{$arrORDERSTATUS_COLOR[$status]}-->";
         // すべてを選択 // memo:change()を使うためdefaultの関数を使わない
-        $("#move_check").change(function(){
+        $("input#move_check").change(function(){
             var $check = $(".check");
             if ($(this).attr('checked')) {
                 $check.attr('checked', true).parent().parent().css("background-color", "#FFCC99");
