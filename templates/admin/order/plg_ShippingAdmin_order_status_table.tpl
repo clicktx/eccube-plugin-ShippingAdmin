@@ -90,20 +90,16 @@
             }
         });
         $("table.list tr").click(function(){
-            var $id = $(this).attr("id");
-            if (!$id){ return }
+            if (!$(this).attr("id")){ return }
             $child = $(this).children().children();
-            var checked_flag = $($child[0]).attr('checked');
 
-            if (checked_flag){
-                $(this).css("background-color", default_bg_color);
+            if ($(this).hasClass("active")){
+                $(this).css("background-color", default_bg_color).removeClass("active");
                 $($child[0]).attr("checked", false);
-            }
-            else{
-                $(this).css("background-color", "#FFCC99");
+            } else {
+                $(this).css("background-color", "#FFCC99").addClass("active");
                 $($child[0]).attr("checked", true);
             }
-            // return false;
         });
 
         // 荷物追跡番号入力
