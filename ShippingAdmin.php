@@ -175,21 +175,21 @@ class ShippingAdmin extends SC_Plugin_Base {
 
                 // 管理機能 受注管理
                 if(strpos($filename, "order/index.tpl") !== false) {
-                    $objTransform->select("form#search_form table", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_search_form.tpl"));
-                    $objTransform->select("form#form1")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_form1.tpl"));
+                    $objTransform->select("form#search_form table", 0)->appendChild(file_get_contents($template_dir . "order/index_search_form.tpl"));
+                    $objTransform->select("form#form1")->replaceElement(file_get_contents($template_dir . "order/index_form1.tpl"));
                 }
                 // 受注情報登録・編集画面
                 elseif(strpos($filename, "order/edit.tpl") !== false) {
-                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/order_edit.tpl"));
                 }
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
-                    $objTransform->select("div.btn", 1)->find("a.btn-normal")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status_btn.tpl"));
-                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status_table.tpl"));
+                    $objTransform->select("div.btn", 1)->find("a.btn-normal")->replaceElement(file_get_contents($template_dir . "order/order_status_btn.tpl"));
+                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/order_status_table.tpl"));
                 }
                 // 管理機能＞受注情報表示
                 elseif(strpos($filename, "order/disp.tpl") !== false) {
-                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_disp.tpl"));
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/order_disp.tpl"));
                 }
                 break;
         }
