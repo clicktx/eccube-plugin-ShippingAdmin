@@ -71,7 +71,6 @@ class ShippingAdmin extends SC_Plugin_Base {
 
         // plugin用HTML_dir以外の場所はアンインストール時に削除する
         if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) print_r("失敗");
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/templates/admin/order/plg_ShippingAdmin_delive_edit.tpl", TEMPLATE_ADMIN_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.tpl") === false) print_r("失敗");
     }
 
     /**
@@ -97,7 +96,6 @@ class ShippingAdmin extends SC_Plugin_Base {
 
         // ファイル削除
         if(SC_Helper_FileManager_Ex::deleteFile(HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false); // TODO エラー処理
-        if(SC_Helper_FileManager_Ex::deleteFile(TEMPLATE_ADMIN_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.tpl") === false); // TODO エラー処理
     }
 
     /**
@@ -177,21 +175,21 @@ class ShippingAdmin extends SC_Plugin_Base {
 
                 // 管理機能 受注管理
                 if(strpos($filename, "order/index.tpl") !== false) {
-                    $objTransform->select("form#search_form table", 0)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_search_form.tpl"));
-                    $objTransform->select("form#form1")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_index_form1.tpl"));
+                    $objTransform->select("form#search_form table", 0)->appendChild(file_get_contents($template_dir . "order/index_search_form.tpl"));
+                    $objTransform->select("form#form1")->replaceElement(file_get_contents($template_dir . "order/index_form1.tpl"));
                 }
                 // 受注情報登録・編集画面
                 elseif(strpos($filename, "order/edit.tpl") !== false) {
-                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_edit.tpl"));
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/order_edit.tpl"));
                 }
                 // 受注管理＞対応状況管理
                 elseif(strpos($filename, "order/status.tpl") !== false) {
-                    $objTransform->select("div.btn", 1)->find("a.btn-normal")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status_btn.tpl"));
-                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_status_table.tpl"));
+                    $objTransform->select("div.btn", 1)->find("a.btn-normal")->replaceElement(file_get_contents($template_dir . "order/order_status_btn.tpl"));
+                    $objTransform->select("table.list")->replaceElement(file_get_contents($template_dir . "order/order_status_table.tpl"));
                 }
                 // 管理機能＞受注情報表示
                 elseif(strpos($filename, "order/disp.tpl") !== false) {
-                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/plg_ShippingAdmin_order_disp.tpl"));
+                    $objTransform->select("table.form", 2)->appendChild(file_get_contents($template_dir . "order/order_disp.tpl"));
                 }
                 break;
         }

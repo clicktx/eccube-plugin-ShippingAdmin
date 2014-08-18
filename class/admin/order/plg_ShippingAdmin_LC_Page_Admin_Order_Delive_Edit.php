@@ -5,17 +5,17 @@
  * Copyright(c) 2014 clicktx. All Rights Reserved.
  *
  * http://perl.no-tubo.net/
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -49,7 +49,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
      */
     function init() {
         parent::init();
-        $this->tpl_mainpage = 'order/plg_ShippingAdmin_delive_edit.tpl';
+        $this->tpl_mainpage = PLUGIN_UPLOAD_REALDIR ."ShippingAdmin/templates/admin/order/delive_edit.tpl";
         $this->tpl_mainno = 'order';
         $this->tpl_maintitle = '受注管理';
         $this->tpl_subtitle = '配送情報登録';
