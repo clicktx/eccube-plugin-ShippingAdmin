@@ -28,14 +28,14 @@
         $("input#move_check").change(function(){
             var $check = $(".check");
             if ($(this).attr('checked')) {
-                $check.attr('checked', true).parent().parent().css("background-color", "#FFCC99");
+                $check.attr('checked', true).parent().parent().addClass("active").css("background-color", "#FFCC99");
             } else {
-                $check.attr('checked', false).parent().parent().css("background-color", default_bg_color);
+                $check.attr('checked', false).parent().parent().removeClass("active").css("background-color", default_bg_color);
             }
         });
         $("table.list tr").click(function(){
             if (!$(this).attr("id")){ return }
-            $child = $(this).children().children();
+            var $child = $(this).children().children();
 
             if ($(this).hasClass("active")){
                 $(this).css("background-color", default_bg_color).removeClass("active");
