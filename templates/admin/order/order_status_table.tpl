@@ -20,6 +20,54 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *}-->
 
+<script type="text/javascript" src="<!--{$smarty.const.ROOT_URLPATH}-->plugin/ShippingAdmin/js/jquery.excolorboxform-0.1.3.js"></script>
+<script>
+    $(function(){
+        var default_bg_color = "<!--{$arrORDERSTATUS_COLOR[$status]}-->";
+        // すべてを選択 // memo:change()を使うためdefaultの関数を使わない
+        $("input#move_check").change(function(){
+            var $check = $(".check");
+            if ($(this).attr('checked')) {
+                $check.attr('checked', true).parent().parent().addClass("active").css("background-color", "#FFCC99");
+            } else {
+                $check.attr('checked', false).parent().parent().removeClass("active").css("background-color", default_bg_color);
+            }
+        });
+        $("table.list tr").click(function(){
+            if (!$(this).attr("id")){ return }
+            var $child = $(this).children().children();
+
+            if ($(this).hasClass("active")){
+                $(this).css("background-color", default_bg_color).removeClass("active");
+                $($child[0]).attr("checked", false);
+            } else {
+                $(this).css("background-color", "#FFCC99").addClass("active");
+                $($child[0]).attr("checked", true);
+            }
+        });
+
+        // 荷物追跡番号入力
+        var isLastPage, complateContent = false;
+        var option = {
+            overlayClose: true
+            ,escKey: true
+            ,onComplete : function(api){
+                isLastPage = !api.getContents().find('form').size();
+                if (isLastPage) {
+                    complateContent = api.getContents().find('.complate-content').html();
+                    api.close();
+                }
+            }
+            ,onClosed : function(api){
+                if (isLastPage) {
+                    api.getTarget().html(complateContent);
+                }
+            }
+        };
+        $("td.plg_delive a").exColorboxForm(option);
+    });
+</script>
+
             <table class="list">
                 <col width="4%" />
                 <col width="10%" />
@@ -76,50 +124,3 @@
                 </tr>
                 <!--{/section}-->
             </table>
-<script type="text/javascript" src="<!--{$smarty.const.ROOT_URLPATH}-->plugin/ShippingAdmin/js/jquery.excolorboxform-0.1.3.js"></script>
-<script>
-    $(function(){
-        var default_bg_color = "<!--{$arrORDERSTATUS_COLOR[$status]}-->";
-        // すべてを選択 // memo:change()を使うためdefaultの関数を使わない
-        $("input#move_check").change(function(){
-            var $check = $(".check");
-            if ($(this).attr('checked')) {
-                $check.attr('checked', true).parent().parent().css("background-color", "#FFCC99");
-            } else {
-                $check.attr('checked', false).parent().parent().css("background-color", default_bg_color);
-            }
-        });
-        $("table.list tr").click(function(){
-            if (!$(this).attr("id")){ return }
-            $child = $(this).children().children();
-
-            if ($(this).hasClass("active")){
-                $(this).css("background-color", default_bg_color).removeClass("active");
-                $($child[0]).attr("checked", false);
-            } else {
-                $(this).css("background-color", "#FFCC99").addClass("active");
-                $($child[0]).attr("checked", true);
-            }
-        });
-
-        // 荷物追跡番号入力
-        var isLastPage, complateContent = false;
-        var option = {
-            overlayClose: true
-            ,escKey: true
-            ,onComplete : function(api){
-                isLastPage = !api.getContents().find('form').size();
-                if (isLastPage) {
-                    complateContent = api.getContents().find('.complate-content').html();
-                    api.close();
-                }
-            }
-            ,onClosed : function(api){
-                if (isLastPage) {
-                    api.getTarget().html(complateContent);
-                }
-            }
-        };
-        $("td.plg_delive a").exColorboxForm(option);
-    });
-</script>
