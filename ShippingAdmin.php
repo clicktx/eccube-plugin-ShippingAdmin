@@ -64,13 +64,19 @@ class ShippingAdmin extends SC_Plugin_Base {
 
         // ファイルのコピー
         // memo: plugin用HTML_dirにコピーするのでuninnstall時には削除必要ない？
-        if(!file_exists(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "js"))mkdir(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code']. "/js");
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/html/js/jquery.excolorboxform-0.1.3.js", PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/js/jquery.excolorboxform-0.1.3.js") === false) print_r("失敗");
-        if(!file_exists(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "css"))mkdir(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/css");
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/html/css/plg_ShippingAdmin.css", PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/css/plg_ShippingAdmin.css") === false) print_r("失敗");
+        if(!file_exists(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/js"))mkdir(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code']. "/js");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/html/js/jquery.excolorboxform-0.1.3.js", PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/js/jquery.excolorboxform-0.1.3.js") === false) {
+            SC_Utils_Ex::sfDispSiteError(FREE_ERROR_MSG, '', false, PLUGIN_UPLOAD_REALDIR . PLUGIN_HTML_REALDIR . ' に書き込めません。パーミッションをご確認ください。');
+        }
+        if(!file_exists(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/css"))mkdir(PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/css");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/html/css/plg_ShippingAdmin.css", PLUGIN_HTML_REALDIR . $arrPlugin['plugin_code'] . "/css/plg_ShippingAdmin.css") === false) {
+            SC_Utils_Ex::sfDispSiteError(FREE_ERROR_MSG, '', false, PLUGIN_UPLOAD_REALDIR . PLUGIN_HTML_REALDIR . ' に書き込めません。パーミッションをご確認ください。');
+        }
 
         // plugin用HTML_dir以外の場所はアンインストール時に削除する
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) print_r("失敗");
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) {
+            SC_Utils_Ex::sfDispSiteError(FREE_ERROR_MSG, '', false, PLUGIN_UPLOAD_REALDIR . HTML_REALDIR . ' に書き込めません。パーミッションをご確認ください。');
+        }
     }
 
     /**
