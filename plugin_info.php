@@ -37,7 +37,7 @@ class plugin_info {
     /** プラグインバージョン(必須) */
     static $PLUGIN_VERSION     = "0.1.2";
     /** 本体対応バージョン(必須) */
-    static $COMPLIANT_VERSION  = "2.13.0～2.13.2";
+    static $COMPLIANT_VERSION  = "2.13.0～2.13.3";
     /** 作者(必須) */
     static $AUTHOR             = "clicktx";
     /** 説明(必須) */
