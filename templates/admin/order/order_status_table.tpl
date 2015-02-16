@@ -27,22 +27,22 @@
         // すべてを選択 // memo:change()を使うためdefaultの関数を使わない
         $("input#move_check").change(function(){
             var $check = $(".check");
-            if ($(this).attr('checked')) {
-                $check.attr('checked', true).parent().parent().addClass("active").css("background-color", "#FFCC99");
+            if ($(this).prop('checked')) {
+                $check.prop('checked', true).parent().parent().addClass("active").css("background-color", "#FFCC99");
             } else {
-                $check.attr('checked', false).parent().parent().removeClass("active").css("background-color", default_bg_color);
+                $check.prop('checked', false).parent().parent().removeClass("active").css("background-color", default_bg_color);
             }
         });
         $("table.list tr").click(function(){
-            if (!$(this).attr("id")){ return }
+            if (!$(this).prop("id")){ return }
             var $child = $(this).children().children();
 
             if ($(this).hasClass("active")){
                 $(this).css("background-color", default_bg_color).removeClass("active");
-                $($child[0]).attr("checked", false);
+                $($child[0]).prop("checked", false);
             } else {
                 $(this).css("background-color", "#FFCC99").addClass("active");
-                $($child[0]).attr("checked", true);
+                $($child[0]).prop("checked", true);
             }
         });
 
