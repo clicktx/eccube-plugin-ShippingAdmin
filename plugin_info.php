@@ -52,12 +52,12 @@ class plugin_info {
      * 使用するフックポイントを設定すると、フックポイントが競合した際にアラートが出ます。
      * ここで宣言することで、インストール時にdtb_plugin_hoolpointsに登録され、register関数を書かずにフックポイントでの介入が可能です。*/
     static $HOOK_POINTS = array(
-        // array("LC_Page_Admin_Order_Edit_action_before","push_arrShippingKeys"),
-        // array("LC_Page_Admin_Order_Disp_action_before","push_arrShippingKeys"),
-        // array("LC_Page_Admin_Order_action_before","admin_order_before"),
-        // array("LC_Page_Admin_Order_Status_action_after","admin_order_status_after"),
-        // array("prefilterTransform","prefilterTransform"),
-        // array("SC_FormParam_construct","addParam"),
+        array("LC_Page_Admin_Order_Edit_action_before","push_arrShippingKeys"),
+        array("LC_Page_Admin_Order_Disp_action_before","push_arrShippingKeys"),
+        array("LC_Page_Admin_Order_action_before","admin_order_before"),
+        array("LC_Page_Admin_Order_Status_action_after","admin_order_status_after"),
+        array("prefilterTransform","prefilterTransform"),
+        array("SC_FormParam_construct","addParam"),
     );
 
     /** ライセンス */
