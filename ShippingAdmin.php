@@ -239,13 +239,13 @@ class ShippingAdmin extends SC_Plugin_Base {
      * @param SC_Helper_Plugin $objHelperPlugin
      */
     function register(SC_Helper_Plugin $objHelperPlugin) {
-        // $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
-        // $objHelperPlugin->addAction("LC_Page_Admin_Order_Disp_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
-        // $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
-        // $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Disp_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
 
-        // $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
-        // $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
     }
 
 
