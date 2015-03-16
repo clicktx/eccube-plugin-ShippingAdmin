@@ -23,7 +23,7 @@
 <script type="text/javascript" src="<!--{$smarty.const.ROOT_URLPATH}-->plugin/ShippingAdmin/js/jquery.excolorboxform-0.1.3.js"></script>
 <script>
     $(function(){
-        var default_bg_color = "<!--{$arrORDERSTATUS_COLOR[$status]}-->";
+        var default_bg_color = "<!--{$arrORDERSTATUS_COLOR[$SelectedStatus]}-->";
         // すべてを選択 // memo:change()を使うためdefaultの関数を使わない
         $("input#move_check").change(function(){
             var $check = $(".check");
