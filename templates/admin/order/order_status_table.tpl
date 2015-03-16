@@ -98,7 +98,15 @@
                     <td class="center"><!--{$arrORDERSTATUS[$status]}--></td>
                     <td class="center"><a href="#" onclick="eccube.openWindow('./disp.php?order_id=<!--{$arrStatus[cnt].order_id}-->','order_disp','800','900',{resizable:'no',focus:false}); return false;" ><!--{$arrStatus[cnt].order_id}--></a></td>
                     <td class="center"><!--{$arrStatus[cnt].create_date|sfDispDBDate}--></td>
-                    <td><!--{$arrStatus[cnt].order_name01|h}--> <!--{$arrStatus[cnt].order_name02|h}--></td>
+                    <td>
+                        <!--{if $arrStatus[cnt].customer_id}-->
+                        <a href="#" onClick="eccube.openWindow('../customer/edit.php?edit_customer_id=<!--{$arrStatus[cnt].customer_id}-->&mode=edit_search','edit_search','1100','900',{resizable:'no',focus:false}); return false;">
+                            <!--{$arrStatus[cnt].order_name01|h}--> <!--{$arrStatus[cnt].order_name02|h}-->
+                        </a>
+                        <!--{else}-->
+                            <!--{$arrStatus[cnt].order_name01|h}--> <!--{$arrStatus[cnt].order_name02|h}-->
+                        <!--{/if}-->
+                    </td>
                     <!--{assign var=payment_id value=`$arrStatus[cnt].payment_id`}-->
                     <td class="center"><!--{$arrPayment[$payment_id]|h}--></td>
                     <td class="right"><!--{$arrStatus[cnt].total|number_format}--></td>
