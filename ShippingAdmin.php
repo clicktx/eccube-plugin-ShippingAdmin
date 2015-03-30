@@ -146,6 +146,10 @@ class ShippingAdmin extends SC_Plugin_Base {
      * @return void
      */
     function loadClassFileChange(&$classname, &$classpath) {
+        if ($classname == 'SC_Helper_Purchase_Ex') {
+            $classpath = PLUGIN_UPLOAD_REALDIR . 'ShippingAdmin/class/helper/plg_ShippingAdmin_SC_Helper_Purchase.php';
+            $classname = 'plg_ShippingAdmin_SC_Helper_Purchase';
+        }
     }
 
     /**
