@@ -21,6 +21,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+// 管理
+require_once PLUGIN_UPLOAD_REALDIR . 'ShippingAdmin/class/admin/order/plg_ShippingAdmin_LC_Page_Admin_Order.php';
+require_once PLUGIN_UPLOAD_REALDIR . 'ShippingAdmin/class/admin/order/plg_ShippingAdmin_LC_Page_Admin_Order_Status.php';
+
+
 /**
  * プラグイン のメインクラス.
  *
@@ -74,7 +79,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
 
         // plugin用HTML_dir以外の場所はアンインストール時に削除する
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) {
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) {
             SC_Utils_Ex::sfDispSiteError(FREE_ERROR_MSG, '', false, PLUGIN_UPLOAD_REALDIR . HTML_REALDIR . ' に書き込めません。パーミッションをご確認ください。');
         }
     }
@@ -241,8 +246,8 @@ class ShippingAdmin extends SC_Plugin_Base {
     function register(SC_Helper_Plugin $objHelperPlugin) {
         $objHelperPlugin->addAction("LC_Page_Admin_Order_Edit_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("LC_Page_Admin_Order_Disp_action_before", array(&$this, "push_arrShippingKeys"), $this->arrSelfInfo['priority']);
-        $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(&$this, "admin_order_before"), $this->arrSelfInfo['priority']);
-        $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(&$this, "admin_order_status_after"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(new plg_ShippingAdmin_LC_Page_Admin_Order(), "action_before"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(new plg_ShippingAdmin_LC_Page_Admin_Order_Status(), "action_after"), $this->arrSelfInfo['priority']);
 
         $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
@@ -258,101 +263,6 @@ class ShippingAdmin extends SC_Plugin_Base {
     function push_arrShippingKeys($objPage) {
         // キーワードにplg_shippingadmin_tracking_noを追加しておく
         array_push($objPage->arrShippingKeys, 'plg_shippingadmin_tracking_no');
-    }
-
-    /**
-    * 管理機能 受注情報リスト.
-    *
-    * @param LC_Page_Admin_Order $objPage 管理受注情報リスト のページクラス.
-    * @return void
-    */
-    function admin_order_before($objPage) {
-        // modeを書き換えて LC_Page_Admin_Order の処理を無効にする
-        $mode = $_REQUEST['mode'];
-        $_REQUEST['mode'] = 'plg_ShippingAdmin_' . $mode;
-        $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
-
-        $objFormParam = new SC_FormParam_Ex();
-        $objPage->lfInitParam($objFormParam);
-        $objFormParam->setParam($_POST);
-        $objPage->arrHidden = $objFormParam->getSearchArray();
-        $objPage->arrForm = $objFormParam->getFormParamList();
-        $objPurchase = new SC_Helper_Purchase_Ex();
-
-        switch ($objPage->getMode()) {
-            // 削除
-            case 'plg_ShippingAdmin_delete':
-                $order_id = $objFormParam->getValue('order_id');
-                $objPurchase->cancelOrder($order_id, ORDER_CANCEL, true);
-                // 削除後に検索結果を表示するため breakしない
-
-            // 検索パラメーター生成後に処理実行するため breakしない
-            case 'plg_ShippingAdmin_csv':
-            case 'plg_ShippingAdmin_delete_all':
-
-            // 検索パラメーターの生成
-            case 'plg_ShippingAdmin_search':
-                $objFormParam->convParam();
-                $objFormParam->trimParam();
-                $objPage->arrErr = $this->plg_ShippingAdmin_lfCheckError($objFormParam);
-                $arrParam = $objFormParam->getHashArray();
-
-                if (count($objPage->arrErr) == 0) {
-                    $where = 'del_flg = 0';
-                    $arrWhereVal = array();
-                    foreach ($arrParam as $key => $val) {
-                        if ($val == '') {
-                            continue;
-                        }
-                        $objPage->buildQuery($key, $where, $arrWhereVal, $objFormParam);
-                        $this->plg_ShippingAdimn_buildQuery($key, $where, $arrWhereVal, $objFormParam);
-                    }
-
-                    $order = 'update_date DESC';
-
-                    /* -----------------------------------------------
-                     * 処理を実行
-                     * ----------------------------------------------- */
-                    switch ($objPage->getMode()) {
-                        // CSVを送信する。
-                        case 'plg_ShippingAdmin_csv':
-                            $objPage->doOutputCSV($where, $arrWhereVal, $order);
-
-                            SC_Response_Ex::actionExit();
-                            break;
-
-                        // 全件削除(ADMIN_MODE)
-                        case 'plg_ShippingAdmin_delete_all':
-                            // $page_max = 0;
-                            // $arrResults = $objPage->findOrders($where, $arrWhereVal,
-                            //                                $page_max, 0, $order);
-                            // foreach ($arrResults as $element) {
-                            //     $objPurchase->cancelOrder($element['order_id'], ORDER_CANCEL, true);
-                            // }
-                            break;
-
-                        // 検索実行
-                        default:
-                            // 行数の取得
-                            $objPage->tpl_linemax = $objPage->getNumberOfLines($where, $arrWhereVal);
-                            // ページ送りの処理
-                            $page_max = SC_Utils_Ex::sfGetSearchPageMax($objFormParam->getValue('search_page_max'));
-                            // ページ送りの取得
-                            $objNavi = new SC_PageNavi_Ex($objPage->arrHidden['search_pageno'],
-                                                          $objPage->tpl_linemax, $page_max,
-                                                          'eccube.moveNaviPage', NAVI_PMAX);
-                            $objPage->arrPagenavi = $objNavi->arrPagenavi;
-
-                            // 検索結果の取得
-                            $objPage->arrResults = $objPage->findOrders($where, $arrWhereVal,
-                                                                  $page_max, $objNavi->start_row, $order);
-                            break;
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     /** memo: mode=csv時の SC_Response_Ex::actionExit(); でエラーがでるための対策
@@ -376,175 +286,6 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
 
         return $mode;
-    }
-
-    /**
-     * 入力内容のチェックを行う.
-     *
-     * @param  SC_FormParam $objFormParam SC_FormParam インスタンス
-     * @return void
-     */
-    public function plg_ShippingAdmin_lfCheckError(&$objFormParam)
-    {
-        $objErr = new SC_CheckError_Ex($objFormParam->getHashArray());
-        $objErr->arrErr = $objFormParam->checkError();
-
-        // 相関チェック
-        $objErr->doFunc(array('注文番号1', '注文番号2', 'search_order_id1', 'search_order_id2'), array('GREATER_CHECK'));
-        $objErr->doFunc(array('年齢1', '年齢2', 'search_age1', 'search_age2'), array('GREATER_CHECK'));
-        $objErr->doFunc(array('購入金額1', '購入金額2', 'search_total1', 'search_total2'), array('GREATER_CHECK'));
-        // 受注日
-        $objErr->doFunc(array('開始', 'search_sorderyear', 'search_sordermonth', 'search_sorderday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('終了', 'search_eorderyear', 'search_eordermonth', 'search_eorderday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('開始', '終了', 'search_sorderyear', 'search_sordermonth', 'search_sorderday', 'search_eorderyear', 'search_eordermonth', 'search_eorderday'), array('CHECK_SET_TERM'));
-        // 更新日
-        $objErr->doFunc(array('開始', 'search_supdateyear', 'search_supdatemonth', 'search_supdateday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('終了', 'search_eupdateyear', 'search_eupdatemonth', 'search_eupdateday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('開始', '終了', 'search_supdateyear', 'search_supdatemonth', 'search_supdateday', 'search_eupdateyear', 'search_eupdatemonth', 'search_eupdateday'), array('CHECK_SET_TERM'));
-        // 生年月日
-        $objErr->doFunc(array('開始', 'search_sbirthyear', 'search_sbirthmonth', 'search_sbirthday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('終了', 'search_ebirthyear', 'search_ebirthmonth', 'search_ebirthday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('開始', '終了', 'search_sbirthyear', 'search_sbirthmonth', 'search_sbirthday', 'search_ebirthyear', 'search_ebirthmonth', 'search_ebirthday'), array('CHECK_SET_TERM'));
-        // 発送日
-        $objErr->doFunc(array('開始', 'search_sdelivedyear', 'search_sdelivedmonth', 'search_sdelivedday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('終了', 'search_edelivedyear', 'search_edelivedmonth', 'search_edelivedday'), array('CHECK_DATE'));
-        $objErr->doFunc(array('開始', '終了', 'search_sdelivedyear', 'search_sdelivedmonth', 'search_sdelivedday', 'search_edelivedyear', 'search_edelivedmonth', 'search_edelivedday'), array('CHECK_SET_TERM'));
-
-        return $objErr->arrErr;
-    }
-
-    /**
-     * 通常のクエリ構築後に宅配便お問い合わせ番号の条件を追加する.
-     *
-     * 構築内容は, 引数の $where 及び $arrValues にそれぞれ追加される.
-     *
-     * @param  string       $key          検索条件のキー
-     * @param  string       $where        構築する WHERE 句
-     * @param  array        $arrValues    構築するクエリパラメーター
-     * @param  SC_FormParam $objFormParam SC_FormParam インスタンス
-     * @return void
-     */
-    public function plg_ShippingAdimn_buildQuery($key, &$where, &$arrValues, &$objFormParam)
-    {
-        // 絞り込み条件を追加する
-        switch ($key){
-            case 'search_sdelivedyear':
-                $date = SC_Utils_Ex::sfGetTimestamp($objFormParam->getValue('search_sdelivedyear'),
-                                                    $objFormParam->getValue('search_sdelivedmonth'),
-                                                    $objFormParam->getValue('search_sdelivedday'));
-                $where.= ' AND commit_date >= ?';
-                $arrValues[] = $date;
-                break;
-            case 'search_edelivedyear':
-                $date = SC_Utils_Ex::sfGetTimestamp($objFormParam->getValue('search_edelivedyear'),
-                                                    $objFormParam->getValue('search_edelivedmonth'),
-                                                    $objFormParam->getValue('search_edelivedday'), true);
-                $where.= ' AND commit_date <= ?';
-                $arrValues[] = $date;
-                break;
-            case 'search_plg_shippingadmin_tracking_no':
-                $where .= ' AND EXISTS (SELECT 1 FROM dtb_shipping ds WHERE ds.order_id = dtb_order.order_id AND ds.plg_shippingadmin_tracking_no LIKE ?)';
-                $arrValues[] = sprintf('%%%s%%', $objFormParam->getValue($key));
-                break;
-            case 'search_deliv_id':
-                $where.= ' AND deliv_id = ?';
-                $arrValues[] = $objFormParam->getValue($key);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-    * 管理機能 対応状況管理 のページクラス.
-    *
-    * @param LC_Page_Admin_Order_Status $objPage 管理対応状況管理 のページクラス.
-    * @return void
-    */
-    function admin_order_status_after($objPage) {
-        $objPurchase = new SC_Helper_Purchase_Ex();
-
-        // 配送業者一覧を取得
-        $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
-
-        // memo: オリジナルのコードと２重で実行することになるが...
-        // パラメーター管理クラス
-        $objFormParam = new SC_FormParam_Ex();
-        // パラメーター情報の初期化
-        $objPage->lfInitParam($objFormParam);
-        $objFormParam->setParam($_POST);
-        // 入力値の変換
-        $objFormParam->convParam();
-
-        switch ($objPage->getMode()) {
-            case 'plg_shippingadmin_update':
-                $changeStatus = $objFormParam->getValue('change_status');
-                $arrMoveOderId = $objFormParam->getValue('move');
-
-                switch ($changeStatus) {
-                    // 削除
-                    case 'delete':
-                        // 削除確認がチェックされているか？
-                        $del_check = $objFormParam->getValue('del_check');
-                        if ($del_check){
-                            $objPage->lfDelete($arrMoveOderId);
-                        } else {
-                            $objPage->tpl_onload = "window.alert('削除時は削除確認にチェックを入れて下さい。');";
-                        }
-
-                        break;
-                    // 発送済み
-                    case '5':
-                        // 発送済みに変更する場合は荷物追跡番号が登録されているかチェック
-                        $checkFlag = 0;
-                        foreach ($arrMoveOderId as $index => $order_id) {
-                            $arrShippings = $objPurchase->getShippings($order_id, false);
-                            $checkFlag += $this->lfCheckTrackingNo($arrShippings);
-                        }
-                        if ($checkFlag){
-                            $objPage->tpl_onload = "window.alert('荷物追跡番号が登録されていないため、選択項目を" . $arrORDERSTATUS[$changeStatus] . "へ移動出来ませんでした');";
-                            break;
-                        }
-                        // 正常の場合はbreak; しない
-                    // 更新
-                    default:
-                        $objPage->lfStatusMove($changeStatus, $arrMoveOderId);
-                        break;
-                }
-                break;
-
-            case 'search':
-            default:
-                break;
-        }
-
-        // 対応状況
-        $status = $objFormParam->getValue('status');
-        if (strlen($status) === 0) {
-                //デフォルトで新規受付一覧表示
-                $status = ORDER_NEW;
-        }
-        $objPage->SelectedStatus = $status;
-        // 検索結果の表示
-        $objPage->lfStatusDisp($status, $objFormParam->getValue('search_pageno'));
-        // 配送情報を代入
-        foreach ($objPage->arrStatus as $key_index => $value) {
-            $order_id = $objPage->arrStatus[$key_index]['order_id'];
-            $arrShippings = $objPurchase->getShippings($order_id, false);
-            $objPage->arrStatus[$key_index]['shippings'] = $arrShippings;
-        }
-    }
-
-    /**
-    * 荷物追跡番号が登録されているかチェック
-    * @param
-    */
-    function lfCheckTrackingNo(&$arrShippings){
-        $checkFlag = 0;
-        foreach ($arrShippings as $index => $shippings) {
-            if (!$shippings['plg_shippingadmin_tracking_no']){ ++$checkFlag; }
-        }
-        return $checkFlag;
     }
 }
 ?>
