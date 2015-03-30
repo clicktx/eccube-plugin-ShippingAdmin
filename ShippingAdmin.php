@@ -74,7 +74,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         }
 
         // plugin用HTML_dir以外の場所はアンインストール時に削除する
-        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/class/admin/order/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) {
+        if(copy(PLUGIN_UPLOAD_REALDIR . "ShippingAdmin/plg_ShippingAdmin_delive_edit.php", HTML_REALDIR . "admin/order/plg_ShippingAdmin_delive_edit.php") === false) {
             SC_Utils_Ex::sfDispSiteError(FREE_ERROR_MSG, '', false, PLUGIN_UPLOAD_REALDIR . HTML_REALDIR . ' に書き込めません。パーミッションをご確認ください。');
         }
     }
