@@ -233,7 +233,7 @@ class ShippingAdmin extends SC_Plugin_Base {
     }
 
     /**
-     * SC_系処理の介入箇所とコールバック関数を設定
+     * 処理の介入箇所とコールバック関数を設定
      * registerはプラグインインスタンス生成時に実行されます
      *
      * @param SC_Helper_Plugin $objHelperPlugin
