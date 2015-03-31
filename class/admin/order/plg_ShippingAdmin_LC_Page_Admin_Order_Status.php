@@ -40,6 +40,8 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
     * @return void
     */
     function action_after($objPage) {
+        $arrOrderStatusMail = $this->getOrderStatusMailTemplateIds();
+
         $objPurchase = new SC_Helper_Purchase_Ex();
 
         // 配送業者一覧を取得
@@ -87,6 +89,11 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
                     // 更新
                     default:
                         $objPage->lfStatusMove($changeStatus, $arrMoveOderId);
+
+                        // メール送信
+                        if ($arrOrderStatusMail[$changeStatus]){
+                            $this->doSendMail($arrMoveOderId, $arrOrderStatusMail[$changeStatus]);
+                        }
                         break;
                 }
                 break;
@@ -124,5 +131,37 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
             if (!$shippings['plg_shippingadmin_tracking_no']){ ++$checkFlag; }
         }
         return $checkFlag;
+    }
+
+    /**
+    * ステータス変更で送信するメールテンプレート
+    * memo: とりあえずベタ書き。設定ページがあると親切(後で作る！)  
+    * @param
+    * @return  array  ステータスに関連付けられたメールテンプレートIDの配列
+    */
+    function getOrderStatusMailTemplateIds(){
+        return array(
+            // 1 => false, // 新規受付
+            // 2 => false, // 入金待ち
+            3 => 3, // キャンセル時
+            // 4 => false, // 取り寄せ中（発送準備中）
+            5 => 50, // 発送時
+            6 => 20, // 入金時
+            // 7 => false, // 決済処理中
+        );
+    }
+
+    /**
+    * ステータス変更時のメール送信
+    * @param  array  $arrSendOderId   送信するorderID
+    * @param  int    $template_id  メールテンプレートID
+    * @return void
+    */
+    function doSendMail($arrSendOderId, $template_id){
+        $objMail = new SC_Helper_Mail_Ex();
+
+        foreach ($arrSendOderId as $order_id) {
+            $objMail->sfSendOrderMail($order_id, $template_id);
+        }
     }
 }
