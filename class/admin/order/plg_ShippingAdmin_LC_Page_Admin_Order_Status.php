@@ -40,12 +40,13 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
     * @return void
     */
     function action_after($objPage) {
-        $arrOrderStatusMail = $this->getOrderStatusMailTemplateIds();
-
         $objPurchase = new SC_Helper_Purchase_Ex();
 
         // 配送業者一覧を取得
         $objPage->arrDeliv = SC_Helper_Delivery_Ex::getIDValueList();
+
+        // 自動メールを送信するステータス一覧を取得
+        $arrAutoMailOrderStatus = $this->getOrderStatusMailTemplateIds();
 
         // memo: オリジナルのコードと２重で実行することになるが...
         // パラメーター管理クラス
@@ -92,8 +93,8 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
 
                         // メール送信
                         $disable_auto_mail = $objFormParam->getValue('disable_auto_mail');
-                        if (!$disable_auto_mail && $arrOrderStatusMail[$changeStatus]){
-                            $this->doSendMail($arrMoveOderId, $arrOrderStatusMail[$changeStatus]);
+                        if (!$disable_auto_mail && $arrAutoMailOrderStatus[$changeStatus]){
+                            $this->doSendMail($arrMoveOderId, $arrAutoMailOrderStatus[$changeStatus]);
                         }
                         break;
                 }
