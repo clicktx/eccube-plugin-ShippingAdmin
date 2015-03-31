@@ -91,7 +91,8 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
                         $objPage->lfStatusMove($changeStatus, $arrMoveOderId);
 
                         // メール送信
-                        if ($arrOrderStatusMail[$changeStatus]){
+                        $disable_auto_mail = $objFormParam->getValue('disable_auto_mail');
+                        if (!$disable_auto_mail && $arrOrderStatusMail[$changeStatus]){
                             $this->doSendMail($arrMoveOderId, $arrOrderStatusMail[$changeStatus]);
                         }
                         break;

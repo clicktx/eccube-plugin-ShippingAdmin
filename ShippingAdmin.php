@@ -237,6 +237,7 @@ class ShippingAdmin extends SC_Plugin_Base {
         if ($this->getMode() == 'plg_shippingadmin_update') {
             $param->addParam('変更後対応状況', 'change_status', STEXT_LEN, 'KVa', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
             $param->addParam('移動注文番号', 'move', INT_LEN, 'n', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
+            $param->addParam('自動メールを送信チェック', 'disable_auto_mail', INT_LEN, 'n');
             $param->addParam('削除確認', 'del_check', INT_LEN, 'n');
         }
     }
