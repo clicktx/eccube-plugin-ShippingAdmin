@@ -1,0 +1,60 @@
+<?php
+/*
+ * ShippingAdmin
+ *
+ * Copyright(c) 2014 clicktx. All Rights Reserved.
+ *
+ * http://perl.no-tubo.net/
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+/**
+ * 商品購入関連のヘルパークラス. オーバーライド
+ *
+ * @author clicktx
+ * @version
+ */
+class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
+{
+    /**
+     * 注文受付メールを送信する.
+     *
+     * 端末種別IDにより, 携帯電話の場合は携帯用の文面,
+     * それ以外の場合は PC 用の文面でメールを送信する.
+     *
+     * @param integer $order_id 受注ID
+     * @param  object  $objPage LC_Page インスタンス
+     * @return boolean 送信に成功したか。現状では、正確には取得できない。
+     */
+    public static function sendOrderMail($order_id, &$objPage = NULL)
+    {
+        $objMail = new SC_Helper_Mail_Ex();
+
+        // setPageは、プラグインの処理に必要(see #1798)
+        if (is_object($objPage)) {
+            $objMail->setPage($objPage);
+        }
+
+        $arrOrder = SC_Helper_Purchase::getOrder($order_id);
+        if (empty($arrOrder)) {
+            return false; // 失敗
+        }
+        $template_id = $arrOrder['device_type_id'] == DEVICE_TYPE_MOBILE ? 2 : 1;
+        $objMail->sfSendOrderMail($order_id, $template_id);
+
+        return true; // 成功
+    }
+}
