@@ -115,7 +115,8 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
 
     /**
     * 荷物追跡番号が登録されているかチェック
-    * @param
+    * @param  array  $arrShippings  受注情報の配列
+    * @return int    全てに宅配番号欄が登録されていれば0。
     */
     function lfCheckTrackingNo(&$arrShippings){
         $checkFlag = 0;
