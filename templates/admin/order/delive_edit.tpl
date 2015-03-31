@@ -88,10 +88,10 @@
                         <select name="<!--{$key1}-->[<!--{$shipping_index}-->]" style="<!--{$arrErr[$key1][$shipping_index]|sfGetErrorColor}-->">
                             <!--{html_options options=$arrYearShippingDate selected=$arrShipping[$key1]|default:""}-->
                         </select>年
-                        <select name="<!--{$key2}-->[<!--{$shipping_index}-->]" style="<!--{$arrErr[$key2][$shipping_index]|sfGetErrorColor}-->">
+                        <select name="<!--{$key2}-->[<!--{$shipping_index}-->]" style="<!--{$arrErr[$key1][$shipping_index]|sfGetErrorColor}-->">
                             <!--{html_options options=$arrMonthShippingDate selected=$arrShipping[$key2]|default:""}-->
                         </select>月
-                        <select name="<!--{$key3}-->[<!--{$shipping_index}-->]" style="<!--{$arrErr[$key3][$shipping_index]|sfGetErrorColor}-->">
+                        <select name="<!--{$key3}-->[<!--{$shipping_index}-->]" style="<!--{$arrErr[$key1][$shipping_index]|sfGetErrorColor}-->">
                             <!--{html_options options=$arrDayShippingDate selected=$arrShipping[$key3]|default:""}-->
                         </select>日
                     </td>
