@@ -47,6 +47,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
 
         // 自動メールを送信するステータス一覧を取得
         $arrAutoMailOrderStatus = $this->getOrderStatusMailTemplateIds();
+        $objPage->tpl_auto_mail_order_status = $arrAutoMailOrderStatus;
 
         // memo: オリジナルのコードと２重で実行することになるが...
         // パラメーター管理クラス

@@ -20,8 +20,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *}-->
     <a class="btn-normal" href="javascript:;" onclick="plg_ShippingAdmin_fnSelectCheckSubmit(); return false;"><span>移動</span></a>
-    <label><input type="checkbox" name="disable_auto_mail" value="1">自動メールを送信しない</label>
     <label><input type="checkbox" name="del_check" value="1">削除確認</label>
+    <label><input type="checkbox" name="disable_auto_mail" value="1">自動メールを送信しない</label>
+    <span>
+        (
+        <!--{foreach key=key item=item from=$tpl_auto_mail_order_status}-->
+            <!--{if $item}-->
+                <span><!--{$arrORDERSTATUS[$key]}--></span>
+            <!--{/if}-->
+        <!--{/foreach}-->
+        に変更した場合は自動でメールが送信されます )
+    </span>
 
 <script type="text/javascript">
 <!--
