@@ -141,7 +141,10 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_Delive_Edit extends LC_Page_Admin_Or
     public function lfInitParam(&$objFormParam)
     {
         // 検索条件のパラメーターを初期化
-        parent::lfInitParam($objFormParam);
+        // parent::lfInitParam($objFormParam);
+        $objFormParam->addParam('注文番号', 'order_id');
+        $objFormParam->addParam('配送ID', 'shipping_id', INT_LEN, 'n', array('MAX_LENGTH_CHECK', 'NUM_CHECK'), 0);
+
 
         $objFormParam->addParam('配送業者', 'deliv_id', INT_LEN, 'n', array('EXIST_CHECK', 'MAX_LENGTH_CHECK', 'NUM_CHECK'));
         $objFormParam->addParam('荷物追跡番号', 'plg_shippingadmin_tracking_no', STEXT_LEN, 'n', array('EXIST_CHECK', 'MAX_LENGTH_CHECK'));
