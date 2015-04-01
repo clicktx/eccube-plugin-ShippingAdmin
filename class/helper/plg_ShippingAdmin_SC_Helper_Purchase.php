@@ -47,16 +47,14 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
      */
     public static function sendOrderMail($order_id, &$objPage = NULL)
     {
-        // オーダーステータス変更
-        $objPurchase = new SC_Helper_Purchase_Ex();
-        $objQuery =& SC_Query_Ex::getSingletonInstance();
-
-        $arrPaymentId = SC_Helper_Purchase_Ex::plg_ShippingAdmin_getPaymentId();
-        $objQuery->begin();
-        if (in_array($objPage->arrForm['payment_id'], $arrPaymentId)){
-            $objPurchase->sfUpdateOrderStatus($order_id, ORDER_PAY_WAIT);
+        $arrOrder = SC_Helper_Purchase::getOrder($order_id);
+        if (empty($arrOrder)) {
+            return false; // 失敗
         }
-        $objQuery->commit();
+        $payment_id = $arrOrder['payment_id'];
+
+        // オーダーステータス変更
+        SC_Helper_Purchase_EX::plg_ShippingAdmin_changeStatusOrderPayWait($order_id, $payment_id);
 
         // 受注メール送信
         $objMail = new SC_Helper_Mail_Ex();
@@ -66,10 +64,6 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
             $objMail->setPage($objPage);
         }
 
-        $arrOrder = SC_Helper_Purchase::getOrder($order_id);
-        if (empty($arrOrder)) {
-            return false; // 失敗
-        }
         $template_id = $arrOrder['device_type_id'] == DEVICE_TYPE_MOBILE ? 2 : 1;
         $objMail->sfSendOrderMail($order_id, $template_id);
 
@@ -86,5 +80,25 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
     public static function plg_ShippingAdmin_getPaymentId(){
         $arrPaymentId = array(3);
         return $arrPaymentId;
+    }
+
+    /**
+     * 銀行振込の場合はステータスを入金待ちにする
+     *
+     * @param integer $order_id   受注ID
+     * @param integer $payment_id 支払い方法ID
+     * @return void
+     */
+    public static function plg_ShippingAdmin_changeStatusOrderPayWait($order_id, $payment_id){
+        // オーダーステータス変更
+        $objPurchase = new SC_Helper_Purchase_Ex();
+        $objQuery =& SC_Query_Ex::getSingletonInstance();
+
+        $arrPaymentId = $objPurchase->plg_ShippingAdmin_getPaymentId();
+        $objQuery->begin();
+        if (in_array($payment_id, $arrPaymentId)){
+            $objPurchase->sfUpdateOrderStatus($order_id, ORDER_PAY_WAIT);
+        }
+        $objQuery->commit();
     }
 }
