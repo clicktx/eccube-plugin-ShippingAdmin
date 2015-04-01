@@ -30,10 +30,16 @@
 class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
 {
     /**
-     * 注文受付メールを送信する.
+     * 注文受付メールを送信する.override
      *
      * 端末種別IDにより, 携帯電話の場合は携帯用の文面,
      * それ以外の場合は PC 用の文面でメールを送信する.
+     *
+     * plugin:
+     *      - 支払い方法によって送信メールを変える
+     *      - 振込の場合はオーダーステータスを入金待ちにする
+     *          - LC_Page_Shopping_Confirm  mode=confirmの場合はリダイレクトされてしまうため
+     *          - LC_Page_Shopping_Confirm_action_afterフック出来ないため
      *
      * @param integer $order_id 受注ID
      * @param  object  $objPage LC_Page インスタンス
