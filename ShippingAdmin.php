@@ -254,8 +254,9 @@ class ShippingAdmin extends SC_Plugin_Base {
         $objHelperPlugin->addAction("LC_Page_Admin_Order_action_before", array(new plg_ShippingAdmin_LC_Page_Admin_Order(), "action_before"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("LC_Page_Admin_Order_Status_action_after", array(new plg_ShippingAdmin_LC_Page_Admin_Order_Status(), "action_after"), $this->arrSelfInfo['priority']);
 
-        $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
         $objHelperPlugin->addAction("SC_FormParam_construct", array(&$this, "addParam"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("loadClassFileChange", array(&$this, "loadClassFileChange"), $this->arrSelfInfo['priority']);
+        $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $this->arrSelfInfo['priority']);
     }
 
 
