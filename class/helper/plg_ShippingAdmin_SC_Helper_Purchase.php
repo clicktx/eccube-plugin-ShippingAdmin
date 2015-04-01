@@ -64,7 +64,11 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
             $objMail->setPage($objPage);
         }
 
-        $template_id = $arrOrder['device_type_id'] == DEVICE_TYPE_MOBILE ? 2 : 1;
+        // 支払い方法によってメールテンプレートを変更する
+        $arrOrderMailTemplate = SC_Helper_Purchase_EX::plg_ShippingAdmin_getTemplateId();
+        $template_id = $arrOrderMailTemplate[$payment_id];
+
+        // $template_id = $arrOrder['device_type_id'] == DEVICE_TYPE_MOBILE ? 2 : 1;
         $objMail->sfSendOrderMail($order_id, $template_id);
 
         return true; // 成功
@@ -100,5 +104,18 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
             $objPurchase->sfUpdateOrderStatus($order_id, ORDER_PAY_WAIT);
         }
         $objQuery->commit();
+    }
+
+    /**
+     * 受注メール自動振り分け用テンプレート取得
+     *
+     * @return array  支払いIDとテンプレートIDの配列
+     */
+    public static function plg_ShippingAdmin_getTemplateId(){
+        $arrOrderMailTemplate = array(
+            3 => 30,
+            5 => 50,
+        );
+        return $arrOrderMailTemplate;
     }
 }
