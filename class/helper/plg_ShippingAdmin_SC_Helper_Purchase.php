@@ -47,6 +47,18 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
      */
     public static function sendOrderMail($order_id, &$objPage = NULL)
     {
+        // オーダーステータス変更
+        $objPurchase = new SC_Helper_Purchase_Ex();
+        $objQuery =& SC_Query_Ex::getSingletonInstance();
+
+        $arrPaymentId = SC_Helper_Purchase_Ex::plg_ShippingAdmin_getPaymentId();
+        $objQuery->begin();
+        if (in_array($objPage->arrForm['payment_id'], $arrPaymentId)){
+            $objPurchase->sfUpdateOrderStatus($order_id, ORDER_PAY_WAIT);
+        }
+        $objQuery->commit();
+
+        // 受注メール送信
         $objMail = new SC_Helper_Mail_Ex();
 
         // setPageは、プラグインの処理に必要(see #1798)
@@ -62,5 +74,17 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
         $objMail->sfSendOrderMail($order_id, $template_id);
 
         return true; // 成功
+    }
+
+    /**
+     * 入金待ちにする支払い方法IDを取得
+     *
+     * とりあえずベタ書き。あとで設定ページを作れば親切。
+     *
+     * @return array
+     */
+    public static function plg_ShippingAdmin_getPaymentId(){
+        $arrPaymentId = array(3);
+        return $arrPaymentId;
     }
 }
