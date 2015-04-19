@@ -113,8 +113,8 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
      */
     public static function plg_ShippingAdmin_getTemplateId(){
         $arrOrderMailTemplate = array(
-            3 => 30,
-            5 => 50,
+            3 => 30, // JNB
+            5 => 50, // PayPal
         );
         return $arrOrderMailTemplate;
     }
