@@ -69,6 +69,7 @@ class plg_ShippingAdmin_SC_Helper_Purchase extends SC_Helper_Purchase
         $template_id = $arrOrderMailTemplate[$payment_id];
 
         // $template_id = $arrOrder['device_type_id'] == DEVICE_TYPE_MOBILE ? 2 : 1;
+        if (!$template_id){ $template_id = 1; }
         $objMail->sfSendOrderMail($order_id, $template_id);
 
         return true; // 成功
