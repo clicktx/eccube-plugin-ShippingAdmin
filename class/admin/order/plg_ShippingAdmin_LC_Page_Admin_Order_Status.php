@@ -148,7 +148,7 @@ class plg_ShippingAdmin_LC_Page_Admin_Order_status
             // 2 => false, // 入金待ち
             3 => 3, // キャンセル時
             // 4 => false, // 取り寄せ中（発送準備中）
-            5 => 50, // 発送時
+            5 => 10, // 発送時
             6 => 20, // 入金時
             // 7 => false, // 決済処理中
         );
